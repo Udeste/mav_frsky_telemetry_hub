@@ -1,7 +1,7 @@
 #include "frsky-encoder.h"
-#include "Arduino.h"
+#include "utils.h"
 
-FrSkyEncoder::FrSkyEncoder(mavlink_fc_cache* cache, uint16_t rxPin, uint16_t txPin, uint16_t ledPin = LED_BUILTIN) {
+FrSkyEncoder::FrSkyEncoder(mavlink_fc_cache* cache, uint16_t rxPin, uint16_t txPin, uint16_t ledPin) {
   this->cache = cache;
   this->frsky_s_port = new FrskySPort(rxPin, txPin);
   this->frsky_s_port->setLedPin(ledPin);
@@ -38,7 +38,7 @@ void FrSkyEncoder::encode() {
           case FRSKY_POLL_ID_IMU:    this->sendIMU();    break;
           case FRSKY_POLL_ID_25:                         break;
           case FRSKY_POLL_ID_26:                         break;
-          case FRSKY_POLL_ID_TEMP:                       break;
+          case FRSKY_POLL_ID_TEMP:   this->sendTEMP();   break;
           case FRSKY_POLL_ID_FUEL:                       break;
         }
 
@@ -124,13 +124,13 @@ void FrSkyEncoder::sendFAS() {
 void FrSkyEncoder::sendIMU() {
   switch(this->sensor_polls[24]) {
     case 0:
-      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_ACCX_FIRST, this->cache->imu_xacc * 100);
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_ACCX_FIRST, (float)radToDeg(this->cache->att_pitch) * 100);
       break;
     case 1:
-      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_ACCY_FIRST, this->cache->imu_yacc * 100);
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_ACCY_FIRST, (float)radToDeg(this->cache->att_roll) * 100);
       break;
     case 2:
-      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_ACCZ_FIRST, this->cache->imu_zacc * 100);
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_ACCZ_FIRST, (float)radToDeg(this->cache->att_yaw) * 100);
       break;
   }
   this->updateSensorPollsCount(24, 2);
@@ -140,11 +140,11 @@ void FrSkyEncoder::sendTEMP() {
    switch (this->sensor_polls[27]) {
      case 0:
       // TEMP1
-      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_T1_FIRST, this->cache->scaled_temperature / 100);
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_T1_FIRST, (float)this->cache->scaled_temperature / 100);
       break;
      case 1:
       // TEMP2
-      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_T2_FIRST, this->cache->scaled_temperature / 100);
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_T2_FIRST, (float)this->cache->raw_imu_temperature / 100);
       break;
    }
    this->updateSensorPollsCount(27, 1);

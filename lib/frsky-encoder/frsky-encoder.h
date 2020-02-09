@@ -1,10 +1,11 @@
 #include "mavlink-fc-cache.h"
 #include "frsky-s-port.h"
 #include "frsky-sensors-id.h"
+#include "Arduino.h"
 
 class FrSkyEncoder {
   public:
-  FrSkyEncoder          (mavlink_fc_cache* cache, uint16_t rxPin, uint16_t txPin, uint16_t ledPin);
+  FrSkyEncoder          (mavlink_fc_cache* cache, uint16_t rxPin, uint16_t txPin, uint16_t ledPin = LED_BUILTIN);
 
   void                  encode();
 
