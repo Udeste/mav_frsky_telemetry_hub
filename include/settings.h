@@ -27,16 +27,16 @@
   // #define DEBUG                       Serial
   // #define DEBUG_BAUD                  57600
 #elif defined(__AVR_ATmega2560__)
-#define HAL_GPIO_A_LED_PIN          13 // LED_BUILTIN
-#define HAL_GPIO_B_LED_PIN          31
-#define HAL_GPIO_C_LED_PIN          30
-#define HEARTHBEAT_TO_FC_LED_PIN    HAL_GPIO_C_LED_PIN
-#define HEARTHBEAT_FROM_FC_LED_PIN  HAL_GPIO_A_LED_PIN
-#define FRSKY_LED_PIN               HAL_GPIO_B_LED_PIN
-#define FRSKY_SWSERIAL_RX_PIN       A8
-#define FRSKY_SWSERIAL_TX_PIN       A9
-#define FC_SERIAL                   Serial2
-#define FC_SERIAL_BAUD              57600
-#define DEBUG                       Serial
-#define DEBUG_BAUD                  57600
+  #define HAL_GPIO_A_LED_PIN          13 // LED_BUILTIN
+  #define HAL_GPIO_B_LED_PIN          31
+  #define HAL_GPIO_C_LED_PIN          30
+  #define HEARTHBEAT_TO_FC_LED_PIN    HAL_GPIO_C_LED_PIN
+  #define HEARTHBEAT_FROM_FC_LED_PIN  HAL_GPIO_A_LED_PIN
+  #define FRSKY_LED_PIN               HAL_GPIO_B_LED_PIN
+  #define FRSKY_SWSERIAL_RX_PIN       A8
+  #define FRSKY_SWSERIAL_TX_PIN       A9
+  #define FC_SERIAL                   Serial2
+  #define FC_SERIAL_BAUD              57600
+  #define DEBUG                       Serial
+  #define DEBUG_BAUD                  57600
 #endif
