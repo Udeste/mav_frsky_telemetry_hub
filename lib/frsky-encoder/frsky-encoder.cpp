@@ -12,35 +12,34 @@ void FrSkyEncoder::encode() {
        while (this->frsky_s_port->available()) {
         switch (this->frsky_s_port->read()) {
           case FRSKY_POLL_ID_VARIO:  this->sendVario();  break;
-          case FRSKY_POLL_ID_FLVSS:                      break; /* Real MLVSS present on the S-Port bus. No need to send data from FC*/
+          // case FRSKY_POLL_ID_FLVSS:                      break; /* Real MLVSS present on the S-Port bus. No need to send data from FC*/
           case FRSKY_POLL_ID_FAS:    this->sendFAS();    break;
           case FRSKY_POLL_ID_GPS:    this->sendGPS();    break;
-          case FRSKY_POLL_ID_RPM:                        break;
-          case FRSKY_POLL_ID_6:                          break;
+          // case FRSKY_POLL_ID_RPM:
+          // case FRSKY_POLL_ID_6:
           case FRSKY_POLL_ID_SP2R:   this->sendSP2R();   break;
-          case FRSKY_POLL_ID_8:                          break;
-          case FRSKY_POLL_ID_9:                          break;
+          // case FRSKY_POLL_ID_8:
+          // case FRSKY_POLL_ID_9:
           case FRSKY_POLL_ID_ASS:    this->sendASS();    break;
-          case FRSKY_POLL_ID_11:                         break;
-          case FRSKY_POLL_ID_12:                         break;
-          case FRSKY_POLL_ID_13:                         break;
-          case FRSKY_POLL_ID_14:                         break;
-          case FRSKY_POLL_ID_15:                         break;
-          case FRSKY_POLL_ID_16:                         break;
-          case FRSKY_POLL_ID_17:                         break;
-          case FRSKY_POLL_ID_18:                         break;
-          case FRSKY_POLL_ID_19:                         break;
-          case FRSKY_POLL_ID_20:                         break;
-          case FRSKY_POLL_ID_21:                         break;
-          case FRSKY_POLL_ID_22:                         break;
-          case FRSKY_POLL_ID_23:                         break;
+          // case FRSKY_POLL_ID_11:
+          // case FRSKY_POLL_ID_12:
+          // case FRSKY_POLL_ID_13:
+          // case FRSKY_POLL_ID_14:
+          // case FRSKY_POLL_ID_15:
+          // case FRSKY_POLL_ID_16:
+          // case FRSKY_POLL_ID_17:
+          // case FRSKY_POLL_ID_18:
+          // case FRSKY_POLL_ID_19:
+          // case FRSKY_POLL_ID_20:
+          // case FRSKY_POLL_ID_21:
+          // case FRSKY_POLL_ID_22:
+          // case FRSKY_POLL_ID_23:
           case FRSKY_POLL_ID_IMU:    this->sendIMU();    break;
-          case FRSKY_POLL_ID_25:                         break;
-          case FRSKY_POLL_ID_26:                         break;
+          // case FRSKY_POLL_ID_25:
+          // case FRSKY_POLL_ID_26:
           case FRSKY_POLL_ID_TEMP:   this->sendTEMP();   break;
-          case FRSKY_POLL_ID_FUEL:                       break;
+          // case FRSKY_POLL_ID_FUEL:                      break;
         }
-
       };
     }
   };
@@ -59,74 +58,74 @@ void FrSkyEncoder::sendVario() {
 }
 
 void FrSkyEncoder::sendGPS() {
-   switch (this->sensor_polls[4]) {
-     case 0:
+  switch (this->sensor_polls[4]) {
+    case 0:
       // LAT
       this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_LONG_LATI_FIRST, mavToFrskyGPS(this->cache->gps_lat, false));
       break;
-     case 1:
+    case 1:
       // LON
       this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_LONG_LATI_FIRST, mavToFrskyGPS(this->cache->gps_lat, true));
       break;
-     case 2:
+    case 2:
       //SPEED
       this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_SPEED_FIRST, (float)this->cache->gps_vel *  0.01944f);
       break;
-     case 3:
+    case 3:
       // ALT
       this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_ALT_FIRST, (float)this->cache->gps_alt / 1000);
       break;
-     case 4:
+    case 4:
       // COURSE
       this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_COURSE_FIRST, this->cache->vfr_hud_heading * 100);
       break;
-    case 5:
+  case 5:
       // DATA
       this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_TIME_DATE_FIRST, mavToFrskyDateTime(this->cache->gps_time_usec, this->date_time, true));
       break;
-    case 6:{
+  case 6:{
       // TIME
       this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_TIME_DATE_FIRST, mavToFrskyDateTime(this->cache->gps_time_usec, this->date_time, false));
       break;
-    }
-   }
-   this->updateSensorPollsCount(4, 6);
+  }
+  }
+  this->updateSensorPollsCount(4, 6);
 }
 
 void FrSkyEncoder::sendSP2R() {
-   switch (this->sensor_polls[7]) {
-     case 0:
+  switch (this->sensor_polls[7]) {
+    case 0:
       break;
-     case 1:
+    case 1:
       break;
-   }
-   this->updateSensorPollsCount(7, 1);
+  }
+  this->updateSensorPollsCount(7, 1);
 }
 
 void FrSkyEncoder::sendASS() {
-   switch (this->sensor_polls[10]) {
-     case 0:
+  switch (this->sensor_polls[10]) {
+    case 0:
       // AirSpeed
       this->frsky_s_port->sendData(FRSKY_SENSOR_ID_AIR_SPEED_FIRST, this->cache->vfr_hud_airspeed / 100);
       break;
-   }
-   this->updateSensorPollsCount(10, 0);
+  }
+  this->updateSensorPollsCount(10, 0);
 }
 
 void FrSkyEncoder::sendFAS() {
   switch (this->sensor_polls[2]) {
     case 0:
-        // BATTERY %
-        this->frsky_s_port->sendData(FRSKY_SENSOR_ID_FUEL_FIRST, this->cache->sys_battery_remaining);
-        break;
+      // BATTERY %
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_FUEL_FIRST, this->cache->sys_battery_remaining);
+      break;
     case 1:
-        // BATTERY VOLTAGE
-        this->frsky_s_port->sendData(FRSKY_SENSOR_ID_VFAS_FIRST, (uint16_t)roundf(this->cache->sys_voltage_battery1 / 10));
-        break;
+      // BATTERY VOLTAGE
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_VFAS_FIRST, (uint16_t)roundf(this->cache->sys_voltage_battery1 / 10));
+      break;
     case 2:
-        // BATTERY CURRENT
-        this->frsky_s_port->sendData(FRSKY_SENSOR_ID_CURR_FIRST, (uint16_t)roundf(this->cache->sys_current_battery1 / 10));
-        break;
+      // BATTERY CURRENT
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_CURR_FIRST, (uint16_t)roundf(this->cache->sys_current_battery1 / 10));
+      break;
   }
   this->updateSensorPollsCount(2, 2);
 }
@@ -147,17 +146,17 @@ void FrSkyEncoder::sendIMU() {
 }
 
 void FrSkyEncoder::sendTEMP() {
-   switch (this->sensor_polls[27]) {
-     case 0:
+  switch (this->sensor_polls[27]) {
+    case 0:
       // TEMP1
       this->frsky_s_port->sendData(FRSKY_SENSOR_ID_T1_FIRST, (float)this->cache->scaled_temperature / 100);
-      break;
-     case 1:
+    break;
+    case 1:
       // TEMP2
       this->frsky_s_port->sendData(FRSKY_SENSOR_ID_T2_FIRST, (float)this->cache->raw_imu_temperature / 100);
-      break;
-   }
-   this->updateSensorPollsCount(27, 1);
+    break;
+  }
+  this->updateSensorPollsCount(27, 1);
 }
 
 /**
