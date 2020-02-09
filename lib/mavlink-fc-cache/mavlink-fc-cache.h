@@ -47,6 +47,7 @@ struct mavlink_fc_cache {
   // uint8_t[20] satellite_azimuth	       = 0; // deg	Direction of satellite, 0: 0 deg, 255: 360 deg.
   // uint8_t[20] satellite_snr	           = 0; // dB	Signal to noise ratio of satellite
 
+  /* GPS_RAW_INT Message https://mavlink.io/en/messages/common.html#GPS_RAW_INT */
   uint64_t    gps_time_usec              = 0; //	us		Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
   uint8_t     gps_fix_type               = 0; //	https://mavlink.io/en/messages/common.html#GPS_FIX_TYPE
   int32_t     gps_lat                    = 0; //	degE7	Latitude (WGS84, EGM96 ellipsoid)

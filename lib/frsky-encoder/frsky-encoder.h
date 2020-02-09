@@ -2,6 +2,7 @@
 #include "frsky-s-port.h"
 #include "frsky-sensors-id.h"
 #include "Arduino.h"
+#include "utils.h"
 
 class FrSkyEncoder {
   public:
@@ -10,6 +11,7 @@ class FrSkyEncoder {
   void                  encode();
 
   private:
+  DateTime_t            date_time;
   mavlink_fc_cache*     cache;
   FrskySPort*           frsky_s_port;
   uint16_t              sensor_polls[28] = {

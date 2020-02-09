@@ -1,5 +1,4 @@
 #include "frsky-encoder.h"
-#include "utils.h"
 
 FrSkyEncoder::FrSkyEncoder(mavlink_fc_cache* cache, uint16_t rxPin, uint16_t txPin, uint16_t ledPin) {
   this->cache = cache;
@@ -63,24 +62,35 @@ void FrSkyEncoder::sendGPS() {
    switch (this->sensor_polls[4]) {
      case 0:
       // LAT
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_LONG_LATI_FIRST, mavToFrskyGPS(this->cache->gps_lat, false));
       break;
      case 1:
       // LON
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_LONG_LATI_FIRST, mavToFrskyGPS(this->cache->gps_lat, true));
       break;
      case 2:
       //SPEED
-      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_SPEED_FIRST, this->cache->gps_vel *  0.01944f);
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_SPEED_FIRST, (float)this->cache->gps_vel *  0.01944f);
       break;
      case 3:
       // ALT
-      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_ALT_FIRST, this->cache->gps_alt / 1000);
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_ALT_FIRST, (float)this->cache->gps_alt / 1000);
       break;
      case 4:
       // COURSE
       this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_COURSE_FIRST, this->cache->vfr_hud_heading * 100);
       break;
+    case 5:
+      // DATA
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_TIME_DATE_FIRST, mavToFrskyDateTime(this->cache->gps_time_usec, this->date_time, true));
+      break;
+    case 6:{
+      // TIME
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_TIME_DATE_FIRST, mavToFrskyDateTime(this->cache->gps_time_usec, this->date_time, false));
+      break;
+    }
    }
-   this->updateSensorPollsCount(4, 4);
+   this->updateSensorPollsCount(4, 6);
 }
 
 void FrSkyEncoder::sendSP2R() {
