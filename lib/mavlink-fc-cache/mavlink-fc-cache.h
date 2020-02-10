@@ -8,8 +8,8 @@ typedef struct {
   uint8_t    hb_autopilot           = 0; // https://mavlink.io/en/messages/common.html#MAV_AUTOPILOT
   uint8_t    hb_base_mode           = 0; // https://mavlink.io/en/messages/common.html#MAV_MODE_FLAG
   uint32_t   hb_copter_mode         = 0; // https://mavlink.io/en/messages/ardupilotmega.html#COPTER_MODE
-  uint8_t    hb_system_status       = 0; // https://mavlink.io/en/messages/common.html#MAV_STATE
-  uint8_t    hb_mavlink_version     = 0; // https://mavlink.io/en/messages/common.html#MAV_STATE
+  // uint8_t    hb_system_status       = 0; // https://mavlink.io/en/messages/common.html#MAV_STATE
+  // uint8_t    hb_mavlink_version     = 0; // https://mavlink.io/en/messages/common.html#MAV_STATE
 
   /* STATUSTEXT Message https://mavlink.io/en/messages/common.html#STATUSTEXT */
   uint8_t    status_severity		 = 0;  //https://mavlink.io/en/messages/common.html#MAV_SEVERITY
@@ -24,16 +24,16 @@ typedef struct {
 
   /* SYSTEM_TIME Message https://mavlink.io/en/messages/common.html#SYSTEM_TIME */
   uint64_t   time_unix_usec           = 0; // us	Timestamp (UNIX epoch time).
-  uint32_t   time_boot_ms             = 0; // ms	Timestamp (time since system boot).
+  // uint32_t   time_boot_ms             = 0; // ms	Timestamp (time since system boot).
 
   /* ATTITUDE Message https://mavlink.io/en/messages/common.html#ATTITUDE */
-  uint32_t   att_time_boot_ms        = 0; // (time since system boot).
+  // uint32_t   att_time_boot_ms        = 0; // (time since system boot).
   float      att_roll                = 0; // rad	Roll angle (-pi..+pi)
   float      att_pitch               = 0; // rad	Pitch angle (-pi..+pi)
   float      att_yaw                 = 0; // rad	Yaw angle (-pi..+pi)
-  float      att_rollspeed           = 0; // rad/s	Roll angular speed
-  float      att_pitchspeed          = 0; // rad/s	Pitch angular speed
-  float      att_yawspeed            = 0; // rad/s	Yaw angular speed
+  // float      att_rollspeed           = 0; // rad/s	Roll angular speed
+  // float      att_pitchspeed          = 0; // rad/s	Pitch angular speed
+  // float      att_yawspeed            = 0; // rad/s	Yaw angular speed
 
   /* VFR_HUD Message https://mavlink.io/en/messages/common.html#VFR_HUD */
   float      vfr_hud_airspeed            = 0; //	m/s	Current indicated airspeed (IAS).
@@ -69,35 +69,35 @@ typedef struct {
   uint32_t    gps_hdg_acc                = 0; //	degE5		Heading / track uncertainty
 
   /* RAW_IMU Message https://mavlink.io/en/messages/common.html#RAW_IMU */
-  uint64_t    raw_imu_time_us            = 0; // us	Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
-  int16_t     raw_imu_xacc               = 0; // raw	X acceleration
-  int16_t     raw_imu_yacc               = 0; // raw	Y acceleration
-  int16_t     raw_imu_zacc               = 0; // raw	Z acceleration
-  int16_t     raw_imu_xgyro              = 0; // raw	Angular speed around X axis
-  int16_t     raw_imu_ygyro              = 0; // raw	Angular speed around Y axis
-  int16_t     raw_imu_zgyro              = 0; // raw	Angular speed around Z axis
-  int16_t     raw_imu_xmag               = 0; // raw	X Magnetic field
-  int16_t     raw_imu_ymag               = 0; // raw	Y Magnetic field
-  int16_t     raw_imu_zmag               = 0; // raw	Z Magnetic field
-  int8_t      raw_imu_id                 = 0; // id. Ids are numbered from 0 and map to IMUs numbered from 1 (e.g. IMU1 will have a message with id=0)
+  // uint64_t    raw_imu_time_us            = 0; // us	Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
+  // int16_t     raw_imu_xacc               = 0; // raw	X acceleration
+  // int16_t     raw_imu_yacc               = 0; // raw	Y acceleration
+  // int16_t     raw_imu_zacc               = 0; // raw	Z acceleration
+  // int16_t     raw_imu_xgyro              = 0; // raw	Angular speed around X axis
+  // int16_t     raw_imu_ygyro              = 0; // raw	Angular speed around Y axis
+  // int16_t     raw_imu_zgyro              = 0; // raw	Angular speed around Z axis
+  // int16_t     raw_imu_xmag               = 0; // raw	X Magnetic field
+  // int16_t     raw_imu_ymag               = 0; // raw	Y Magnetic field
+  // int16_t     raw_imu_zmag               = 0; // raw	Z Magnetic field
+  // int8_t      raw_imu_id                 = 0; // id. Ids are numbered from 0 and map to IMUs numbered from 1 (e.g. IMU1 will have a message with id=0)
   int16_t     raw_imu_temperature        = 0; // cdegC	Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).
 
 /* SCALED_IMU Message https://mavlink.io/en/messages/common.html#SCALED_IMU */
-  uint32_t    scaled_imu_time_boot_ms    = 0;  // ms	Timestamp (time since system boot).
-  int16_t     scaled_imu_xacc            = 0; // mG	X acceleration
-  int16_t     scaled_imu_yacc            = 0; // mG	Y acceleration
-  int16_t     scaled_imu_zacc            = 0; // mG	Z acceleration
-  int16_t     scaled_imu_xgyro           = 0; // mrad/s	Angular speed around X axis
-  int16_t     scaled_imu_ygyro           = 0; // mrad/s	Angular speed around Y axis
-  int16_t     scaled_imu_zgyro           = 0; // mrad/s	Angular speed around Z axis
-  int16_t     scaled_imu_xmag            = 0; // mgauss	X Magnetic field
-  int16_t     scaled_imu_ymag            = 0; // mgauss	Y Magnetic field
-  int16_t     scaled_imu_zmag            = 0; // mgauss	Z Magnetic field
+  // uint32_t    scaled_imu_time_boot_ms    = 0;  // ms	Timestamp (time since system boot).
+  // int16_t     scaled_imu_xacc            = 0; // mG	X acceleration
+  // int16_t     scaled_imu_yacc            = 0; // mG	Y acceleration
+  // int16_t     scaled_imu_zacc            = 0; // mG	Z acceleration
+  // int16_t     scaled_imu_xgyro           = 0; // mrad/s	Angular speed around X axis
+  // int16_t     scaled_imu_ygyro           = 0; // mrad/s	Angular speed around Y axis
+  // int16_t     scaled_imu_zgyro           = 0; // mrad/s	Angular speed around Z axis
+  // int16_t     scaled_imu_xmag            = 0; // mgauss	X Magnetic field
+  // int16_t     scaled_imu_ymag            = 0; // mgauss	Y Magnetic field
+  // int16_t     scaled_imu_zmag            = 0; // mgauss	Z Magnetic field
   int16_t     scaled_imu_temperature     = 0; // cdegC	Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).
 
   /* SCALED_PRESSURE Message https://mavlink.io/en/messages/common.html#SCALED_PRESSURE */
-  float       scaled_press_abs           = 0; // hPa	Absolute pressure
-  float       scaled_press_diff          = 0; // hPa	Differential pressure 1
+  // float       scaled_press_abs           = 0; // hPa	Absolute pressure
+  // float       scaled_press_diff          = 0; // hPa	Differential pressure 1
   int16_t     scaled_temperature         = 0; // cdegC	Temperature
 } mavlink_fc_cache_t;
 

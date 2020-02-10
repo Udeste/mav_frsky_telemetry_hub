@@ -58,30 +58,30 @@ void MavlinkParser::parseMavlinkMsg(mavlink_message_t message) {
     case MAVLINK_MSG_ID_SYSTEM_TIME:
       parseSYSTEM_TIME(message);
       break;
-    case MAVLINK_MSG_ID_SCALED_IMU:
-    case MAVLINK_MSG_ID_SCALED_IMU2:
-    case MAVLINK_MSG_ID_SCALED_IMU3:
-    case MAVLINK_MSG_ID_GPS_STATUS:
-    case MAVLINK_MSG_ID_GLOBAL_POSITION_INT:
-    case MAVLINK_MSG_ID_RC_CHANNELS_RAW:
-    case MAVLINK_MSG_ID_SERVO_OUTPUT_RAW:
-    case MAVLINK_MSG_ID_MISSION_ITEM:
-    case MAVLINK_MSG_ID_MISSION_CURRENT:
-    case MAVLINK_MSG_ID_MISSION_COUNT:
-    case MAVLINK_MSG_ID_NAV_CONTROLLER_OUTPUT:
-    case MAVLINK_MSG_ID_RC_CHANNELS:
-    case MAVLINK_MSG_ID_REQUEST_DATA_STREAM:
-    case MAVLINK_MSG_ID_MISSION_ITEM_INT:
-    case MAVLINK_MSG_ID_RADIO_STATUS:
-    case MAVLINK_MSG_ID_POWER_STATUS:
-    case MAVLINK_MSG_ID_BATTERY_STATUS:
-    case MAVLINK_MSG_ID_SENSOR_OFFSETS:
-    case MAVLINK_MSG_ID_MEMINFO:
-    case MAVLINK_MSG_ID_RADIO:
-    case MAVLINK_MSG_ID_RANGEFINDER:
-    case MAVLINK_MSG_ID_AHRS2:
-    case MAVLINK_MSG_ID_BATTERY2:
-    case MAVLINK_MSG_ID_AHRS3:
+    // case MAVLINK_MSG_ID_SCALED_IMU:
+    // case MAVLINK_MSG_ID_SCALED_IMU2:
+    // case MAVLINK_MSG_ID_SCALED_IMU3:
+    // case MAVLINK_MSG_ID_GPS_STATUS:
+    // case MAVLINK_MSG_ID_GLOBAL_POSITION_INT:
+    // case MAVLINK_MSG_ID_RC_CHANNELS_RAW:
+    // case MAVLINK_MSG_ID_SERVO_OUTPUT_RAW:
+    // case MAVLINK_MSG_ID_MISSION_ITEM:
+    // case MAVLINK_MSG_ID_MISSION_CURRENT:
+    // case MAVLINK_MSG_ID_MISSION_COUNT:
+    // case MAVLINK_MSG_ID_NAV_CONTROLLER_OUTPUT:
+    // case MAVLINK_MSG_ID_RC_CHANNELS:
+    // case MAVLINK_MSG_ID_REQUEST_DATA_STREAM:
+    // case MAVLINK_MSG_ID_MISSION_ITEM_INT:
+    // case MAVLINK_MSG_ID_RADIO_STATUS:
+    // case MAVLINK_MSG_ID_POWER_STATUS:
+    // case MAVLINK_MSG_ID_BATTERY_STATUS:
+    // case MAVLINK_MSG_ID_SENSOR_OFFSETS:
+    // case MAVLINK_MSG_ID_MEMINFO:
+    // case MAVLINK_MSG_ID_RADIO:
+    // case MAVLINK_MSG_ID_RANGEFINDER:
+    // case MAVLINK_MSG_ID_AHRS2:
+    // case MAVLINK_MSG_ID_BATTERY2:
+    // case MAVLINK_MSG_ID_AHRS3:
     default:  break;
   }
 }
@@ -96,8 +96,8 @@ void MavlinkParser::parseHBFromFC(mavlink_message_t msg) {
   cache->hb_autopilot       = mavlink_msg_heartbeat_get_autopilot(&msg);
   cache->hb_base_mode       = mavlink_msg_heartbeat_get_base_mode(&msg);
   cache->hb_copter_mode     = mavlink_msg_heartbeat_get_custom_mode(&msg);
-  cache->hb_system_status   = mavlink_msg_heartbeat_get_system_status(&msg);
-  cache->hb_mavlink_version = mavlink_msg_heartbeat_get_mavlink_version(&msg);
+  // cache->hb_system_status   = mavlink_msg_heartbeat_get_system_status(&msg);
+  // cache->hb_mavlink_version = mavlink_msg_heartbeat_get_mavlink_version(&msg);
 
   last_hb_from_fc_ms = millis();
 
@@ -121,16 +121,16 @@ void MavlinkParser::parseSYS_STATUS(mavlink_message_t msg) {
 
 void MavlinkParser::parseSYSTEM_TIME(mavlink_message_t msg) {
   cache->time_unix_usec = mavlink_msg_system_time_get_time_unix_usec(&msg);
-  cache->time_boot_ms   = mavlink_msg_system_time_get_time_boot_ms(&msg);
+  // cache->time_boot_ms   = mavlink_msg_system_time_get_time_boot_ms(&msg);
 }
 
 void MavlinkParser::parseATTITUDE(mavlink_message_t msg) {
   cache->att_roll       = mavlink_msg_attitude_get_roll(&msg);
   cache->att_pitch      = mavlink_msg_attitude_get_pitch(&msg);
   cache->att_yaw        = mavlink_msg_attitude_get_yaw(&msg);
-  cache->att_rollspeed  = mavlink_msg_attitude_get_rollspeed(&msg);
-  cache->att_pitchspeed = mavlink_msg_attitude_get_pitchspeed(&msg);
-  cache->att_yawspeed   = mavlink_msg_attitude_get_yawspeed(&msg);
+  // cache->att_rollspeed  = mavlink_msg_attitude_get_rollspeed(&msg);
+  // cache->att_pitchspeed = mavlink_msg_attitude_get_pitchspeed(&msg);
+  // cache->att_yawspeed   = mavlink_msg_attitude_get_yawspeed(&msg);
 }
 
 void MavlinkParser::parseVFR_HUD(mavlink_message_t msg) {
@@ -163,21 +163,21 @@ void MavlinkParser::parseGPS_RAW_INT(mavlink_message_t msg) {
 }
 
 void MavlinkParser::parseRAW_IMU(mavlink_message_t msg) {
-  cache->raw_imu_xacc          = mavlink_msg_raw_imu_get_xacc(&msg);
-  cache->raw_imu_yacc          = mavlink_msg_raw_imu_get_yacc(&msg);
-  cache->raw_imu_zacc          = mavlink_msg_raw_imu_get_zacc(&msg);
-  cache->raw_imu_xgyro         = mavlink_msg_raw_imu_get_xgyro(&msg);
-  cache->raw_imu_ygyro         = mavlink_msg_raw_imu_get_ygyro(&msg);
-  cache->raw_imu_zgyro         = mavlink_msg_raw_imu_get_zgyro(&msg);
-  cache->raw_imu_xmag          = mavlink_msg_raw_imu_get_xmag(&msg);
-  cache->raw_imu_ymag          = mavlink_msg_raw_imu_get_ymag(&msg);
-  cache->raw_imu_zmag          = mavlink_msg_raw_imu_get_zmag(&msg);
+  // cache->raw_imu_xacc          = mavlink_msg_raw_imu_get_xacc(&msg);
+  // cache->raw_imu_yacc          = mavlink_msg_raw_imu_get_yacc(&msg);
+  // cache->raw_imu_zacc          = mavlink_msg_raw_imu_get_zacc(&msg);
+  // cache->raw_imu_xgyro         = mavlink_msg_raw_imu_get_xgyro(&msg);
+  // cache->raw_imu_ygyro         = mavlink_msg_raw_imu_get_ygyro(&msg);
+  // cache->raw_imu_zgyro         = mavlink_msg_raw_imu_get_zgyro(&msg);
+  // cache->raw_imu_xmag          = mavlink_msg_raw_imu_get_xmag(&msg);
+  // cache->raw_imu_ymag          = mavlink_msg_raw_imu_get_ymag(&msg);
+  // cache->raw_imu_zmag          = mavlink_msg_raw_imu_get_zmag(&msg);
   cache->raw_imu_temperature   = mavlink_msg_raw_imu_get_temperature(&msg);
 }
 
 void MavlinkParser::parseSCALED_PRESSURE(mavlink_message_t msg) {
-  cache->scaled_press_abs   = mavlink_msg_scaled_pressure_get_press_abs(&msg);
-  cache->scaled_press_diff  = mavlink_msg_scaled_pressure_get_press_diff(&msg);
+  // cache->scaled_press_abs   = mavlink_msg_scaled_pressure_get_press_abs(&msg);
+  // cache->scaled_press_diff  = mavlink_msg_scaled_pressure_get_press_diff(&msg);
   cache->scaled_temperature = mavlink_msg_scaled_pressure_get_temperature(&msg);
 }
 

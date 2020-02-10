@@ -6,18 +6,22 @@
 
 class FrSkyEncoder {
   public:
-  FrSkyEncoder          (mavlink_fc_cache_t* cache, uint16_t rxPin, uint16_t txPin, uint16_t ledPin = LED_BUILTIN);
+  FrSkyEncoder          (mavlink_fc_cache_t* cache,
+                         uint16_t rx_pin,
+                         uint16_t tx_pin,
+                         uint16_t led_pin = LED_BUILTIN);
 
   void                  encode();
 
   private:
-  date_time_t            date_time;
-  mavlink_fc_cache_t*     cache;
+  date_time_t           date_time;
+  mavlink_fc_cache_t*   cache;
   FrskySPort*           frsky_s_port;
   uint16_t              sensor_polls[28] = {
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
   };
 
+#if defined FRSKY_TELEMETRY_MODE_SPORT
   void                  sendVario       ();
   void                  sendGPS         ();
   void                  sendSP2R        ();
@@ -25,7 +29,10 @@ class FrSkyEncoder {
   void                  sendFAS         ();
   void                  sendIMU         ();
   void                  sendTEMP        ();
+
+#elif defined FRSKY_TELEMETRY_MODE_PASSTHROUGH
   void                  sendPT          ();
+#endif
 
   void                  updateSensorPollsCount(uint16_t index, uint16_t max);
 

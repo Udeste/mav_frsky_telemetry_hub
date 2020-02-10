@@ -5,12 +5,12 @@
 #include "time.h"
 
 mavlink_fc_cache_t cache;
+date_time_t dt;
 MavlinkParser mav_parser(&cache, &FC_SERIAL);
 FrSkyEncoder frsky_encoder(&cache,
                           FRSKY_SWSERIAL_RX_PIN,
                           FRSKY_SWSERIAL_TX_PIN,
                           FRSKY_LED_PIN);
-                          date_time_t dt;
 #ifdef WIFI
   WifiHandler wifiHandler(WIFI_SSID,
                           WIFI_PASS,
