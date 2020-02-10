@@ -1,7 +1,7 @@
 #include "mavlink-parser.h"
 #include "utils.h"
 
-MavlinkParser::MavlinkParser(mavlink_fc_cache* cache,  HardwareSerial* serial) {
+MavlinkParser::MavlinkParser(mavlink_fc_cache_t* cache,  HardwareSerial* serial) {
   this->cache = cache;
   this->serial = serial;
 }
@@ -54,6 +54,9 @@ void MavlinkParser::parseMavlinkMsg(mavlink_message_t message) {
       break;
     case MAVLINK_MSG_ID_SCALED_PRESSURE:
       parseSCALED_PRESSURE(message);
+      break;
+    case MAVLINK_MSG_ID_SYSTEM_TIME:
+      parseSYSTEM_TIME(message);
       break;
     case MAVLINK_MSG_ID_SCALED_IMU:
     case MAVLINK_MSG_ID_SCALED_IMU2:
@@ -116,6 +119,11 @@ void MavlinkParser::parseSYS_STATUS(mavlink_message_t msg) {
       mavlink_msg_sys_status_get_current_battery(&msg);  //  100 = 1A, i.e dA
 }
 
+void MavlinkParser::parseSYSTEM_TIME(mavlink_message_t msg) {
+  cache->time_unix_usec = mavlink_msg_system_time_get_time_unix_usec(&msg);
+  cache->time_boot_ms   = mavlink_msg_system_time_get_time_boot_ms(&msg);
+}
+
 void MavlinkParser::parseATTITUDE(mavlink_message_t msg) {
   cache->att_roll       = mavlink_msg_attitude_get_roll(&msg);
   cache->att_pitch      = mavlink_msg_attitude_get_pitch(&msg);
@@ -135,7 +143,7 @@ void MavlinkParser::parseVFR_HUD(mavlink_message_t msg) {
 }
 
 void MavlinkParser::parseGPS_RAW_INT(mavlink_message_t msg) {
-  cache->gps_time_usec          = mavlink_msg_gps_raw_int_get_time_usec(&msg);
+  // cache->gps_time_usec          = mavlink_msg_gps_raw_int_get_time_usec(&msg);
   cache->gps_fix_type           = mavlink_msg_gps_raw_int_get_fix_type(&msg);
   cache->gps_satellites_visible = mavlink_msg_gps_raw_int_get_satellites_visible(&msg);
   if(cache->gps_fix_type > GPS_FIX_TYPE_2D_FIX)  {

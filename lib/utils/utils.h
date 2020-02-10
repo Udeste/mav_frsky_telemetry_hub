@@ -4,9 +4,7 @@
 
 void turnLedON(uint16_t ledPin);
 void turnLedOFF(uint16_t ledPin);
-bool armed(mavlink_fc_cache* cache);
-void printserialCache(mavlink_fc_cache* cache, HardwareSerial* serial);
+bool armed(mavlink_fc_cache_t* cache);
+void printserialCache(mavlink_fc_cache_t* cache, HardwareSerial* serial);
 float radToDeg(float rad);
 float degToRad(float deg);
-uint32_t mavToFrskyGPS(float latLon, bool isLat);
-uint32_t mavToFrskyDateTime(uint64_t timestamp, DateTime_t &date_time, bool is_date);

@@ -2,7 +2,7 @@
 
 #ifndef MAVLINK_FC_CACHE
 #define MAVLINK_FC_CACHE
-struct mavlink_fc_cache {
+typedef struct {
   /* HEARTBEAT Message from FC https://mavlink.io/en/messages/common.html#HEARTBEAT */
   uint8_t    hb_type                = 0; // https://mavlink.io/en/messages/common.html#MAV_TYPE
   uint8_t    hb_autopilot           = 0; // https://mavlink.io/en/messages/common.html#MAV_AUTOPILOT
@@ -21,6 +21,10 @@ struct mavlink_fc_cache {
   uint16_t   sys_voltage_battery1     = 0; // mV
   uint16_t   sys_current_battery1     = 0; // cA
   int8_t     sys_battery_remaining    = 0; // %
+
+  /* SYSTEM_TIME Message https://mavlink.io/en/messages/common.html#SYSTEM_TIME */
+  uint64_t   time_unix_usec           = 0; // us	Timestamp (UNIX epoch time).
+  uint32_t   time_boot_ms             = 0; // ms	Timestamp (time since system boot).
 
   /* ATTITUDE Message https://mavlink.io/en/messages/common.html#ATTITUDE */
   uint32_t   att_time_boot_ms        = 0; // (time since system boot).
@@ -48,7 +52,7 @@ struct mavlink_fc_cache {
   // uint8_t[20] satellite_snr	           = 0; // dB	Signal to noise ratio of satellite
 
   /* GPS_RAW_INT Message https://mavlink.io/en/messages/common.html#GPS_RAW_INT */
-  uint64_t    gps_time_usec              = 0; //	us		Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
+  // uint64_t    gps_time_usec              = 0; //	us		Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
   uint8_t     gps_fix_type               = 0; //	https://mavlink.io/en/messages/common.html#GPS_FIX_TYPE
   int32_t     gps_lat                    = 0; //	degE7	Latitude (WGS84, EGM96 ellipsoid)
   int32_t     gps_lon                    = 0; //	degE7	Longitude (WGS84, EGM96 ellipsoid)
@@ -95,6 +99,6 @@ struct mavlink_fc_cache {
   float       scaled_press_abs           = 0; // hPa	Absolute pressure
   float       scaled_press_diff          = 0; // hPa	Differential pressure 1
   int16_t     scaled_temperature         = 0; // cdegC	Temperature
-};
+} mavlink_fc_cache_t;
 
 #endif

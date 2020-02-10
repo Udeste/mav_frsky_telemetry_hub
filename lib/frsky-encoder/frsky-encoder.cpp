@@ -1,6 +1,6 @@
 #include "frsky-encoder.h"
 
-FrSkyEncoder::FrSkyEncoder(mavlink_fc_cache* cache, uint16_t rxPin, uint16_t txPin, uint16_t ledPin) {
+FrSkyEncoder::FrSkyEncoder(mavlink_fc_cache_t* cache, uint16_t rxPin, uint16_t txPin, uint16_t ledPin) {
   this->cache = cache;
   this->frsky_s_port = new FrskySPort(rxPin, txPin);
   this->frsky_s_port->setLedPin(ledPin);
@@ -61,11 +61,11 @@ void FrSkyEncoder::sendGPS() {
   switch (this->sensor_polls[4]) {
     case 0:
       // LAT
-      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_LONG_LATI_FIRST, mavToFrskyGPS(this->cache->gps_lat, false));
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_LONG_LATI_FIRST, mavToFrskyGPS(this->cache->gps_lat, true));
       break;
     case 1:
       // LON
-      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_LONG_LATI_FIRST, mavToFrskyGPS(this->cache->gps_lat, true));
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_LONG_LATI_FIRST, mavToFrskyGPS(this->cache->gps_lon, false));
       break;
     case 2:
       //SPEED
@@ -79,15 +79,14 @@ void FrSkyEncoder::sendGPS() {
       // COURSE
       this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_COURSE_FIRST, this->cache->vfr_hud_heading * 100);
       break;
-  case 5:
+    case 5:
       // DATA
-      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_TIME_DATE_FIRST, mavToFrskyDateTime(this->cache->gps_time_usec, this->date_time, true));
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_TIME_DATE_FIRST, mavToFrskyDateTime(true));
       break;
-  case 6:{
+    case 6:
       // TIME
-      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_TIME_DATE_FIRST, mavToFrskyDateTime(this->cache->gps_time_usec, this->date_time, false));
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_TIME_DATE_FIRST, mavToFrskyDateTime(false));
       break;
-  }
   }
   this->updateSensorPollsCount(4, 6);
 }
@@ -209,4 +208,26 @@ void FrSkyEncoder::sendPT() {
 
 void FrSkyEncoder::updateSensorPollsCount(uint16_t index, uint16_t max) {
   if (this->sensor_polls[index]++ > max) this->sensor_polls[index] = 0;
+}
+
+/**
+ * Mavlink GPS data is lat * 1E7
+ * So (60 * 10000) / 1E7 = 0.06
+ **/
+uint32_t FrSkyEncoder::mavToFrskyGPS(float latLon, bool isLat) {
+  uint32_t data = (uint32_t)(latLon * 0.06) & 0x3FFFFFFF;
+  if(isLat == false) data |= 0x80000000;
+  if(latLon < 0) data |= 0x40000000; // South or West
+
+  return data;
+}
+
+uint32_t FrSkyEncoder::mavToFrskyDateTime(bool is_date) {
+  parseTimestamp(this->cache->time_unix_usec / 1E6, &date_time);
+  uint32_t data = 0x00000000;
+  data |= (uint32_t)(is_date ? date_time.year : date_time.hours)  << 24;
+  data |= (uint32_t)(is_date ? date_time.month : date_time.minutes) << 16;
+  data |= (uint32_t)(is_date ? date_time.day : date_time.seconds)   << 8;
+
+  return is_date ? data |= 0x000000ff : data;
 }

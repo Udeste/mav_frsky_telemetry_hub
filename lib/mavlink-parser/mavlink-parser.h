@@ -18,14 +18,14 @@
 
 class MavlinkParser {
  public:
-  MavlinkParser              (mavlink_fc_cache* cache, HardwareSerial* serial);
+  MavlinkParser              (mavlink_fc_cache_t* cache, HardwareSerial* serial);
   void    begin              (unsigned long baud);
   void    readFC             ();
   void    sendHBToFC         ();
   void    setLedsPins        (uint16_t hb_to_fc_led, uint16_t hb_frm_fc_led);
 
  private:
-  mavlink_fc_cache*   cache;
+  mavlink_fc_cache_t*   cache;
   HardwareSerial*     serial;
   uint8_t             fc_buff[300]        = {};
   uint32_t            last_hb_to_fc_ms    = 0;
@@ -40,6 +40,7 @@ class MavlinkParser {
   void    parseHBFromFC        (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#HEARTBEAT
   void    parseSTATUSTEXT      (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#STATUSTEXT
   void    parseSYS_STATUS      (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#SYS_STATUS
+  void    parseSYSTEM_TIME     (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#SYSTEM_TIME
   void    parseATTITUDE        (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#ATTITUDE
   void    parseVFR_HUD         (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#VFR_HUD
   void    parseGPS_RAW_INT     (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#GPS_RAW_INT

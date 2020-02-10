@@ -10,13 +10,13 @@ void turnLedOFF(uint16_t ledPin) {
     digitalWrite(ledPin, LOW);
 }
 
-bool armed(mavlink_fc_cache* cache) {
+bool armed(mavlink_fc_cache_t* cache) {
   return cache->hb_base_mode >> 7;
 }
 
 int32_t debud_ms;
 
-void printserialCache(mavlink_fc_cache* cache, HardwareSerial* serial) {
+void printserialCache(mavlink_fc_cache_t* cache, HardwareSerial* serial) {
   if (millis() - debud_ms > 1000) {
     serial->print(">>> HEARTBEAT >>>   ");
     serial->print("type=");
@@ -93,7 +93,7 @@ void printserialCache(mavlink_fc_cache* cache, HardwareSerial* serial) {
 
     serial->print(">>> GPS_RAW_INT >>>    ");
     // serial->print("time_usec=");
-    // serial->print((uint32_t)cache->gps_time_usec / 1000);
+    // serial->print((long)cache->gps_time_usec / 1E6);
     // serial->print(" | ");
     serial->print("fix_type=");
     serial->print(cache->gps_fix_type);
@@ -197,24 +197,3 @@ float degToRad(float deg) {
   return deg / RAD_TO_DEG;
 }
 
-/**
- * Mavlink GPS data is lat * 1E7
- * So (60 * 10000) / 1E7 = 0.06
- **/
-uint32_t mavToFrskyGPS(float latLon, bool isLat) {
-  uint32_t data = (uint32_t)(latLon * 0.06) & 0x3FFFFFFF;
-  if(isLat == false) data |= 0x80000000;
-  if(latLon < 0) data |= 0x40000000; // South or West
-
-  return data;
-}
-
-uint32_t mavToFrskyDateTime(uint64_t timestamp, DateTime_t &date_time, bool is_date) {
-  parseTimestamp(timestamp, date_time);
-  uint32_t data = 0x00000000;
-  data |= (uint32_t)date_time.year  << 24;
-  data |= (uint32_t)date_time.month << 16;
-  data |= (uint32_t)date_time.day   << 8;
-
-  return is_date ? data |= 0x000000ff : data;
-}
