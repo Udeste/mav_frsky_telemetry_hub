@@ -68,11 +68,11 @@ void FrSkyEncoder::encode() {
     switch (this->sensor_polls[4]) {
       case 0:
         // LAT
-        this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_LONG_LATI_FIRST, mavToFrskyGPS(this->cache->gps_lat, true));
+        this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_LONG_LATI_FIRST, mavToFrskyGPS(this->cache->global_pos_int_lat, true));
         break;
       case 1:
         // LON
-        this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_LONG_LATI_FIRST, mavToFrskyGPS(this->cache->gps_lon, false));
+        this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_LONG_LATI_FIRST, mavToFrskyGPS(this->cache->global_pos_int_lon, false));
         break;
       case 2:
         //SPEED
@@ -80,7 +80,7 @@ void FrSkyEncoder::encode() {
         break;
       case 3:
         // ALT
-        this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_ALT_FIRST, (float)this->cache->gps_alt / 1000);
+        this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_ALT_FIRST, this->cache->global_pos_int_alt / 10);
         break;
       case 4:
         // COURSE

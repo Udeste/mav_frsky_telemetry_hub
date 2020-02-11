@@ -3,8 +3,6 @@
 static const uint8_t mthdays[]={31,28,31,30,31,30,31,31,30,31,30,31};
 
 void parseTimestamp(uint32_t timestamp, date_time_t* date_time) {
-  Serial.println((uint32_t)timestamp / 1e6);
-
   if (!timestamp || timestamp == date_time->last_timestamp) {
     return;
   }

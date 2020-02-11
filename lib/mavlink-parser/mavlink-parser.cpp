@@ -49,6 +49,9 @@ void MavlinkParser::parseMavlinkMsg(mavlink_message_t message) {
     case MAVLINK_MSG_ID_GPS_RAW_INT:
       parseGPS_RAW_INT(message);
       break;
+    case MAVLINK_MSG_ID_GLOBAL_POSITION_INT:
+      parseGLOBAL_POSITION_INT(message);
+      break;
     case MAVLINK_MSG_ID_RAW_IMU:
       parseRAW_IMU(message);
       break;
@@ -62,7 +65,6 @@ void MavlinkParser::parseMavlinkMsg(mavlink_message_t message) {
     // case MAVLINK_MSG_ID_SCALED_IMU2:
     // case MAVLINK_MSG_ID_SCALED_IMU3:
     // case MAVLINK_MSG_ID_GPS_STATUS:
-    // case MAVLINK_MSG_ID_GLOBAL_POSITION_INT:
     // case MAVLINK_MSG_ID_RC_CHANNELS_RAW:
     // case MAVLINK_MSG_ID_SERVO_OUTPUT_RAW:
     // case MAVLINK_MSG_ID_MISSION_ITEM:
@@ -135,9 +137,9 @@ void MavlinkParser::parseATTITUDE(mavlink_message_t msg) {
 
 void MavlinkParser::parseVFR_HUD(mavlink_message_t msg) {
   cache->vfr_hud_airspeed     = mavlink_msg_vfr_hud_get_airspeed(&msg);
-  cache->vfr_hud_groundspeed  = mavlink_msg_vfr_hud_get_groundspeed(&msg);
+  // cache->vfr_hud_groundspeed  = mavlink_msg_vfr_hud_get_groundspeed(&msg);
   cache->vfr_hud_heading      = mavlink_msg_vfr_hud_get_heading(&msg);
-  cache->vfr_hud_throttle     = mavlink_msg_vfr_hud_get_throttle(&msg);
+  // cache->vfr_hud_throttle     = mavlink_msg_vfr_hud_get_throttle(&msg);
   cache->vfr_hud_alt          = mavlink_msg_vfr_hud_get_alt(&msg);
   cache->vfr_hud_climb        = mavlink_msg_vfr_hud_get_climb(&msg);
 }
@@ -147,18 +149,28 @@ void MavlinkParser::parseGPS_RAW_INT(mavlink_message_t msg) {
   cache->gps_fix_type           = mavlink_msg_gps_raw_int_get_fix_type(&msg);
   cache->gps_satellites_visible = mavlink_msg_gps_raw_int_get_satellites_visible(&msg);
   if(cache->gps_fix_type > GPS_FIX_TYPE_2D_FIX)  {
-    cache->gps_lat              = mavlink_msg_gps_raw_int_get_lat(&msg);
-    cache->gps_lon              = mavlink_msg_gps_raw_int_get_lon(&msg);
-    cache->gps_alt              = mavlink_msg_gps_raw_int_get_alt(&msg);
+    // cache->gps_lat              = mavlink_msg_gps_raw_int_get_lat(&msg);
+    // cache->gps_lon              = mavlink_msg_gps_raw_int_get_lon(&msg);
+    // cache->gps_alt              = mavlink_msg_gps_raw_int_get_alt(&msg);
     cache->gps_eph              = mavlink_msg_gps_raw_int_get_eph(&msg);
     cache->gps_epv              = mavlink_msg_gps_raw_int_get_epv(&msg);
     cache->gps_vel              = mavlink_msg_gps_raw_int_get_vel(&msg);
-    cache->gps_cog              = mavlink_msg_gps_raw_int_get_cog(&msg);
-    cache->gps_alt_ellipsoid    = mavlink_msg_gps_raw_int_get_alt_ellipsoid(&msg);
-    cache->gps_h_acc            = mavlink_msg_gps_raw_int_get_h_acc(&msg);
-    cache->gps_v_acc            = mavlink_msg_gps_raw_int_get_v_acc(&msg);
-    cache->gps_vel_acc          = mavlink_msg_gps_raw_int_get_vel_acc(&msg);
-    cache->gps_hdg_acc          = mavlink_msg_gps_raw_int_get_hdg_acc(&msg);
+    // cache->gps_cog              = mavlink_msg_gps_raw_int_get_cog(&msg);
+    // cache->gps_alt_ellipsoid    = mavlink_msg_gps_raw_int_get_alt_ellipsoid(&msg);
+    // cache->gps_h_acc            = mavlink_msg_gps_raw_int_get_h_acc(&msg);
+    // cache->gps_v_acc            = mavlink_msg_gps_raw_int_get_v_acc(&msg);
+    // cache->gps_vel_acc          = mavlink_msg_gps_raw_int_get_vel_acc(&msg);
+    // cache->gps_hdg_acc          = mavlink_msg_gps_raw_int_get_hdg_acc(&msg);
+  }
+}
+
+void MavlinkParser::parseGLOBAL_POSITION_INT(mavlink_message_t msg) {
+  cache->global_pos_int_rel_alt  = mavlink_msg_global_position_int_get_relative_alt(&msg);
+  // cache->global_pos_int_hdg      = mavlink_msg_global_position_int_get_hdg(&msg);
+  if(cache->gps_fix_type > GPS_FIX_TYPE_2D_FIX)  {
+    cache->global_pos_int_alt      = mavlink_msg_global_position_int_get_alt(&msg);
+    cache->global_pos_int_lat      = mavlink_msg_global_position_int_get_lat(&msg);
+    cache->global_pos_int_lon      = mavlink_msg_global_position_int_get_lon(&msg);
   }
 }
 

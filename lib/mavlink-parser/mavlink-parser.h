@@ -35,15 +35,16 @@ class MavlinkParser {
   uint32_t            hb_from_fc_count    = 0;
   uint32_t            hb_to_fc_count      = 0;
 
-  void    writeToFC            (mavlink_message_t msg);
-  void    parseMavlinkMsg      (mavlink_message_t msg);
-  void    parseHBFromFC        (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#HEARTBEAT
-  void    parseSTATUSTEXT      (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#STATUSTEXT
-  void    parseSYS_STATUS      (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#SYS_STATUS
-  void    parseSYSTEM_TIME     (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#SYSTEM_TIME
-  void    parseATTITUDE        (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#ATTITUDE
-  void    parseVFR_HUD         (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#VFR_HUD
-  void    parseGPS_RAW_INT     (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#GPS_RAW_INT
-  void    parseRAW_IMU         (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#RAW_IMU
-  void    parseSCALED_PRESSURE (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#SCALED_PRESSURE
+  void    writeToFC                  (mavlink_message_t msg);
+  void    parseMavlinkMsg            (mavlink_message_t msg);
+  void    parseHBFromFC              (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#HEARTBEAT
+  void    parseSTATUSTEXT            (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#STATUSTEXT
+  void    parseSYS_STATUS            (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#SYS_STATUS
+  void    parseSYSTEM_TIME           (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#SYSTEM_TIME
+  void    parseATTITUDE              (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#ATTITUDE
+  void    parseVFR_HUD               (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#VFR_HUD
+  void    parseGPS_RAW_INT           (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#GPS_RAW_INT
+  void    parseGLOBAL_POSITION_INT   (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#GLOBAL_POSITION_INT
+  void    parseRAW_IMU               (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#RAW_IMU
+  void    parseSCALED_PRESSURE       (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#SCALED_PRESSURE
 };

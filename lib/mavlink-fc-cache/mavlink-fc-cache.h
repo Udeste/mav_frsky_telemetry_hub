@@ -37,9 +37,9 @@ typedef struct {
 
   /* VFR_HUD Message https://mavlink.io/en/messages/common.html#VFR_HUD */
   float      vfr_hud_airspeed            = 0; //	m/s	Current indicated airspeed (IAS).
-  float      vfr_hud_groundspeed         = 0; //	m/s	Current ground speed.
+  // float      vfr_hud_groundspeed         = 0; //	m/s	Current ground speed.
   int16_t    vfr_hud_heading             = 0; //	deg	Current heading in compass units (0-360, 0=north).
-  uint16_t   vfr_hud_throttle            = 0; //	%	Current throttle setting (0 to 100).
+  // uint16_t   vfr_hud_throttle            = 0; //	%	Current throttle setting (0 to 100).
   float      vfr_hud_alt                 = 0; //	m	Current altitude (MSL).
   float      vfr_hud_climb               = 0; //	m/s	Current climb rate.
 
@@ -54,19 +54,31 @@ typedef struct {
   /* GPS_RAW_INT Message https://mavlink.io/en/messages/common.html#GPS_RAW_INT */
   // uint64_t    gps_time_usec              = 0; //	us		Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
   uint8_t     gps_fix_type               = 0; //	https://mavlink.io/en/messages/common.html#GPS_FIX_TYPE
-  int32_t     gps_lat                    = 0; //	degE7	Latitude (WGS84, EGM96 ellipsoid)
-  int32_t     gps_lon                    = 0; //	degE7	Longitude (WGS84, EGM96 ellipsoid)
-  int32_t     gps_alt                    = 0; //	mm		Altitude (MSL). Positive for up. Note that virtually all GPS modules provide the MSL altitude in addition to the WGS84 altitude.
+  // int32_t     gps_lat                    = 0; //	degE7	Latitude (WGS84, EGM96 ellipsoid)
+  // int32_t     gps_lon                    = 0; //	degE7	Longitude (WGS84, EGM96 ellipsoid)
+  // int32_t     gps_alt                    = 0; //	mm		Altitude (MSL). Positive for up. Note that virtually all GPS modules provide the MSL altitude in addition to the WGS84 altitude.
   uint16_t    gps_eph                    = 0; //				GPS HDOP horizontal dilution of position (unitless). If unknown, set to: UINT16_MAX
   uint16_t    gps_epv                    = 0; //				GPS VDOP vertical dilution of position (unitless). If unknown, set to: UINT16_MAX
   uint16_t    gps_vel                    = 0; //	cm/s	GPS ground speed. If unknown, set to: UINT16_MAX
-  uint16_t    gps_cog                    = 0; //	cdeg	Course over ground (NOT heading, but direction of movement) in degrees * 100, 0.0..359.99 degrees. If unknown, set to: UINT16_MAX
+  // uint16_t    gps_cog                    = 0; //	cdeg	Course over ground (NOT heading, but direction of movement) in degrees * 100, 0.0..359.99 degrees. If unknown, set to: UINT16_MAX
   uint8_t     gps_satellites_visible     = 0; //				Number of satellites visible. If unknown, set to 255
-  int32_t     gps_alt_ellipsoid          = 0; //	mm		Altitude (above WGS84, EGM96 ellipsoid). Positive for up.
-  uint32_t    gps_h_acc                  = 0; //	mm		Position uncertainty. Positive for up.
-  uint32_t    gps_v_acc                  = 0; //	mm		Altitude uncertainty. Positive for up.
-  uint32_t    gps_vel_acc                = 0; //	mm		Speed uncertainty. Positive for up.
-  uint32_t    gps_hdg_acc                = 0; //	degE5		Heading / track uncertainty
+  // int32_t     gps_alt_ellipsoid          = 0; //	mm		Altitude (above WGS84, EGM96 ellipsoid). Positive for up.
+  // uint32_t    gps_h_acc                  = 0; //	mm		Position uncertainty. Positive for up.
+  // uint32_t    gps_v_acc                  = 0; //	mm		Altitude uncertainty. Positive for up.
+  // uint32_t    gps_vel_acc                = 0; //	mm		Speed uncertainty. Positive for up.
+  // uint32_t    gps_hdg_acc                = 0; //	degE5		Heading / track uncertainty
+
+  /* GLOBAL_POSITION_INT Message https://mavlink.io/en/messages/common.html#GLOBAL_POSITION_INT */
+
+  // uint32_t    global_pos_int_time_boot_ms	= 0; //	ms	Timestamp (time since system boot).
+  int32_t     global_pos_int_lat	        = 0; //	degE7	Latitude, expressed
+  int32_t     global_pos_int_lon	        = 0; //	degE7	Longitude, expressed
+  int32_t     global_pos_int_alt	        = 0; //	mm	Altitude (MSL). Note that virtually all GPS modules provide both WGS84 and MSL.
+  int32_t     global_pos_int_rel_alt    	= 0; //	mm	Altitude above ground
+  // int16_t     global_pos_int_vx	          = 0; //	cm/s	Ground X Speed (Latitude, positive north)
+  // int16_t     global_pos_int_vy	          = 0; //	cm/s	Ground Y Speed (Longitude, positive east)
+  // int16_t     global_pos_int_vz	          = 0; //	cm/s	Ground Z Speed (Altitude, positive down)
+  // uint16_t    global_pos_int_hdg          = 0; // cdeg	Vehicle heading (yaw angle), 0.0..359.99 degrees. If unknown, set to: UINT16_MAX
 
   /* RAW_IMU Message https://mavlink.io/en/messages/common.html#RAW_IMU */
   // uint64_t    raw_imu_time_us            = 0; // us	Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
@@ -82,7 +94,7 @@ typedef struct {
   // int8_t      raw_imu_id                 = 0; // id. Ids are numbered from 0 and map to IMUs numbered from 1 (e.g. IMU1 will have a message with id=0)
   int16_t     raw_imu_temperature        = 0; // cdegC	Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).
 
-/* SCALED_IMU Message https://mavlink.io/en/messages/common.html#SCALED_IMU */
+  /* SCALED_IMU Message https://mavlink.io/en/messages/common.html#SCALED_IMU */
   // uint32_t    scaled_imu_time_boot_ms    = 0;  // ms	Timestamp (time since system boot).
   // int16_t     scaled_imu_xacc            = 0; // mG	X acceleration
   // int16_t     scaled_imu_yacc            = 0; // mG	Y acceleration
@@ -93,12 +105,13 @@ typedef struct {
   // int16_t     scaled_imu_xmag            = 0; // mgauss	X Magnetic field
   // int16_t     scaled_imu_ymag            = 0; // mgauss	Y Magnetic field
   // int16_t     scaled_imu_zmag            = 0; // mgauss	Z Magnetic field
-  int16_t     scaled_imu_temperature     = 0; // cdegC	Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).
+  // int16_t     scaled_imu_temperature     = 0; // cdegC	Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).
 
   /* SCALED_PRESSURE Message https://mavlink.io/en/messages/common.html#SCALED_PRESSURE */
   // float       scaled_press_abs           = 0; // hPa	Absolute pressure
   // float       scaled_press_diff          = 0; // hPa	Differential pressure 1
   int16_t     scaled_temperature         = 0; // cdegC	Temperature
+
 } mavlink_fc_cache_t;
 
 #endif

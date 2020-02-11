@@ -60,6 +60,6 @@ void loop() {
   }
 
 #ifdef DEBUG
-  // printserialCache(&cache, &DEBUG);
+  printserialCache(&cache, &DEBUG);
 #endif
 }
