@@ -10,6 +10,8 @@
   }
   #include "WifiHandler.h"
   #define WIFI
+  #define WIFI_SSID                   "..::Ardupilot::.."
+  #define WIFI_PASS                   "ardupilot"
   #define WIFI_CHAN                   9
   #define FRSKY_SWSERIAL_RX_PIN       12
   #define FRSKY_SWSERIAL_TX_PIN       14
@@ -24,8 +26,6 @@
   #define FRSKY_SWSERIAL_TX_PIN       6
   #define FC_SERIAL                   Serial
   #define FC_SERIAL_BAUD              57600
-  // #define DEBUG                       Serial
-  // #define DEBUG_BAUD                  57600
 #elif defined(__AVR_ATmega2560__)
   #define HAL_GPIO_A_LED_PIN          13 // LED_BUILTIN
   #define HAL_GPIO_B_LED_PIN          31
