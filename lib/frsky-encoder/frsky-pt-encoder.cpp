@@ -4,12 +4,8 @@ void FrSkyPassThroughEncoder::encode() {
   while (this->frsky_s_port->available()) {
     if (this->frsky_s_port->read() == FRSKY_POLL_HEADER) {
        while (this->frsky_s_port->available()) {
-        switch (this->frsky_s_port->read()) {
-          case FRSKY_POLL_ID_FUEL:
-            // Serial.print("FRSKY_POLL_ID_FUEL");
-            this->sendPT();
-            break;
-        }
+        switch (this->frsky_s_port->read())
+          case FRSKY_POLL_ID_FUEL: this->sendPT(); break;
       };
     }
   };
@@ -30,7 +26,7 @@ void FrSkyPassThroughEncoder::sendPT() {
         this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_GPS_STATUS, calcGPSStatus());
         break;
     case FRSKY_PT_SENSOR_ID_BATTERY_1: // 0x5003 Battery 1 status
-        // this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_BATTERY_1, calcBattery1());
+        this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_BATTERY_1, calcBattery1());
         break;
     case FRSKY_PT_SENSOR_ID_HOME: // 0x5004 Home
         // this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_HOME, calcHome());
@@ -120,14 +116,14 @@ uint32_t FrSkyPassThroughEncoder::calcVelYaw() {
 }
 
 uint32_t FrSkyPassThroughEncoder::calcApStatus() {
-  uint8_t mode = (uint8_t)(cache->hb_copter_mode + 1) & AP_CONTROL_MODE_LIMIT;
-  uint8_t simple = false;
-  uint8_t s_simple = false;
-  uint8_t is_armed = armed(cache);
-  uint8_t land_complete = is_armed;
-  uint8_t batt_fs = false;
-  uint8_t ekf_fs = false;
-  uint8_t imu_temp = (uint8_t)roundf(cache->raw_imu_temperature / 100) - AP_IMU_TEMP_MIN;
+  uint8_t mode          = (uint8_t)(cache->hb_copter_mode + 1) & AP_CONTROL_MODE_LIMIT;
+  uint8_t simple        = false;
+  uint8_t s_simple      = false;
+  uint8_t is_armed      = armed(cache);
+  uint8_t land_complete = !is_armed;
+  uint8_t batt_fs       = false;
+  uint8_t ekf_fs        = false;
+  uint8_t imu_temp      = (uint8_t)roundf(cache->raw_imu_temperature / 100) - AP_IMU_TEMP_MIN;
 
   uint32_t ap_status = 0;
   ap_status |= (uint32_t)mode          << 0;
@@ -161,6 +157,18 @@ uint32_t FrSkyPassThroughEncoder::calcParameters() {
   return param;
 }
 
+uint32_t FrSkyPassThroughEncoder::calcBattery1() {
+  uint16_t voltage       = ((uint16_t)(this->cache->sys_voltage_battery1 / 100) & BATT_VOLTAGE_LIMIT);
+  uint16_t current       = prepNumber((uint16_t)this->cache->sys_current_battery1 / 100, 2, 1);
+  uint16_t current_drawn = this->cache->battery_consumed;
+
+  uint32_t battery_status = 0;
+  battery_status |= (uint32_t)voltage       << 0;
+  battery_status |= (uint32_t)current       << 9;
+  battery_status |= (uint32_t)current_drawn << 17;
+  return battery_status;
+}
+
 uint16_t FrSkyPassThroughEncoder::calcNextSensorToSend() {
   uint16_t nextSens = 0;
   if ((sizeOfArray(this->low_timing) > 0) &&
@@ -181,7 +189,6 @@ uint16_t FrSkyPassThroughEncoder::calcNextSensorToSend() {
   } else if ((sizeOfArray(this->live_timing) > 0)) {
     nextSens = this->live_timing[this->sensor_polls[8]];
     this->updateSensorPollsCount(8, sizeOfArray(this->live_timing) - 1);
-    last_live_timing_ms = millis();
   }
   return nextSens;
 }

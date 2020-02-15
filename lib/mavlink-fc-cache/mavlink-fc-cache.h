@@ -22,6 +22,19 @@ typedef struct {
   uint16_t   sys_current_battery1     = 0; // cA
   int8_t     sys_battery_remaining    = 0; // %
 
+  /* BATTERY_STATUS Message https://mavlink.io/en/messages/common.html#BATTERY_STATUS */
+  // uint8_t battery_id                          = 0; // Battery ID
+  // uint8_t battery_function                    = 0; // MAV_BATTERY_FUNCTION	Function of the battery
+  // uint8_t battery_type                        = 0; // MAV_BATTERY_TYPE	Type (chemistry) of the battery
+  // int16_t battery_temperature                 = 0; //	cdegC		Temperature of the battery. INT16_MAX for unknown temperature.
+  // uint16_t battery_voltages[10]               = {}; // mV		Battery voltage of cells. Cells above the valid cell count for this battery should have the UINT16_MAX value. If individual cell voltages are unknown or not measured for this battery, then the overall battery voltage should be filled in cell 0, with all others set to UINT16_MAX. If the voltage of the battery is greater than (UINT16_MAX - 1), then cell 0 should be set to (UINT16_MAX - 1), and cell 1 to the remaining voltage. This can be extended to multiple cells if the total voltage is greater than 2 * (UINT16_MAX - 1).
+  // int16_t battery_current                     = 0; //	cA		Battery current, -1: autopilot does not measure the current
+  int32_t battery_consumed                    = 0; //	mAh		Consumed charge, -1: autopilot does not provide consumption estimate
+  // int32_t battery_energy_consumed             = 0; //	hJ		Consumed energy, -1: autopilot does not provide energy consumption estimate
+  // int8_t battery_remaining                    = 0; //	%		Remaining battery energy. Values: [0-100], -1: autopilot does not estimate the remaining battery.
+  // int32_t battery_time_remaining              = 0; //	s		Remaining battery time, 0: autopilot does not provide remaining battery time estimate
+  // uint8_t battery_charge_state                = 0; //	MAV_BATTERY_CHARGE_STATE	State for extent of discharge, provided by autopilot for warning or external reactions
+
   /* SYSTEM_TIME Message https://mavlink.io/en/messages/common.html#SYSTEM_TIME */
   uint64_t   time_unix_usec           = 0; // us	Timestamp (UNIX epoch time).
   // uint32_t   time_boot_ms             = 0; // ms	Timestamp (time since system boot).

@@ -11,6 +11,4 @@ uint16_t    prepNumber(int32_t number, uint8_t digits, uint8_t power);
 
 uint8_t  sizeOfArray(uint16_t* arr);
 
-#ifdef DEBUG
-  void printserialCache(mavlink_fc_cache_t* cache, HardwareSerial* serial);
-#endif
+void printserialCache(mavlink_fc_cache_t* cache, HardwareSerial* serial);

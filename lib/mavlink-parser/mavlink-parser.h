@@ -47,4 +47,5 @@ class MavlinkParser {
   void    parseGLOBAL_POSITION_INT   (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#GLOBAL_POSITION_INT
   void    parseRAW_IMU               (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#RAW_IMU
   void    parseSCALED_PRESSURE       (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#SCALED_PRESSURE
+  void    parseBATTERY_STATUS        (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#BATTERY_STATUS
 };

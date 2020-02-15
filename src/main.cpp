@@ -1,6 +1,8 @@
 #include "settings.h"
 #include "mavlink-parser.h"
-#include "utils.h"
+#ifdef DEBUG
+  #include "utils.h"
+#endif
 #include "time.h"
 #ifdef FRSKY_TELEMETRY_MODE_PASSTHROUGH
   #include "frsky-pt-encoder.h"
@@ -71,8 +73,7 @@ void loop() {
     frsky_encoder.encode();
     delay(0);
   }
-
 #ifdef DEBUG
-  // printserialCache(&cache, &DEBUG);
+// printserialCache(&cache, &DEBUG);
 #endif
 }

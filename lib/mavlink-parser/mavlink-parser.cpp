@@ -61,6 +61,9 @@ void MavlinkParser::parseMavlinkMsg(mavlink_message_t message) {
     case MAVLINK_MSG_ID_SYSTEM_TIME:
       parseSYSTEM_TIME(message);
       break;
+    case MAVLINK_MSG_ID_BATTERY_STATUS:
+      parseBATTERY_STATUS(message);
+      break;
     // case MAVLINK_MSG_ID_SCALED_IMU:
     // case MAVLINK_MSG_ID_SCALED_IMU2:
     // case MAVLINK_MSG_ID_SCALED_IMU3:
@@ -76,7 +79,6 @@ void MavlinkParser::parseMavlinkMsg(mavlink_message_t message) {
     // case MAVLINK_MSG_ID_MISSION_ITEM_INT:
     // case MAVLINK_MSG_ID_RADIO_STATUS:
     // case MAVLINK_MSG_ID_POWER_STATUS:
-    // case MAVLINK_MSG_ID_BATTERY_STATUS:
     // case MAVLINK_MSG_ID_SENSOR_OFFSETS:
     // case MAVLINK_MSG_ID_MEMINFO:
     // case MAVLINK_MSG_ID_RADIO:
@@ -191,6 +193,20 @@ void MavlinkParser::parseSCALED_PRESSURE(mavlink_message_t msg) {
   // cache->scaled_press_abs   = mavlink_msg_scaled_pressure_get_press_abs(&msg);
   // cache->scaled_press_diff  = mavlink_msg_scaled_pressure_get_press_diff(&msg);
   cache->scaled_temperature = mavlink_msg_scaled_pressure_get_temperature(&msg);
+}
+
+void MavlinkParser::parseBATTERY_STATUS(mavlink_message_t msg) {
+  // cache->battery_id               = mavlink_msg_battery_status_get_id(&msg);
+  // cache->battery_function         = mavlink_msg_battery_status_get_battery_function(&msg);
+  // cache->battery_type             = mavlink_msg_battery_status_get_type(&msg);
+  // cache->battery_temperature      = mavlink_msg_battery_status_get_temperature(&msg);
+  // mavlink_msg_battery_status_get_voltages(&msg, cache->battery_voltages);
+  // cache->battery_current          = mavlink_msg_battery_status_get_current_battery(&msg);
+  cache->battery_consumed         = mavlink_msg_battery_status_get_current_consumed(&msg);
+  // cache->battery_energy_consumed  = mavlink_msg_battery_status_get_energy_consumed(&msg);
+  // cache->battery_remaining        = mavlink_msg_battery_status_get_battery_remaining(&msg);
+  // cache->battery_time_remaining   = mavlink_msg_battery_status_get_time_remaining(&msg);
+  // cache->battery_charge_state     = mavlink_msg_battery_status_get_charge_state(&msg);
 }
 
 void MavlinkParser::sendHBToFC() {
