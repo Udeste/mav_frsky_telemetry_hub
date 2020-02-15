@@ -1,16 +1,29 @@
 #include "settings.h"
-#include "utils.h"
 #include "mavlink-parser.h"
-#include "frsky-encoder.h"
+#include "utils.h"
 #include "time.h"
+#ifdef FRSKY_TELEMETRY_MODE_PASSTHROUGH
+  #include "frsky-pt-encoder.h"
+#else
+  #include "frsky-sport-encoder.h"
+#endif
 
 mavlink_fc_cache_t cache;
 date_time_t dt;
 MavlinkParser mav_parser(&cache, &FC_SERIAL);
-FrSkyEncoder frsky_encoder(&cache,
-                          FRSKY_SWSERIAL_RX_PIN,
-                          FRSKY_SWSERIAL_TX_PIN,
-                          FRSKY_LED_PIN);
+
+#ifdef FRSKY_TELEMETRY_MODE_PASSTHROUGH
+  FrSkyPassThroughEncoder frsky_encoder(&cache,
+                                        FRSKY_SWSERIAL_RX_PIN,
+                                        FRSKY_SWSERIAL_TX_PIN,
+                                        FRSKY_LED_PIN);
+#else
+  FrSkySPortEncoder frsky_encoder(&cache,
+                                  FRSKY_SWSERIAL_RX_PIN,
+                                  FRSKY_SWSERIAL_TX_PIN,
+                                  FRSKY_LED_PIN);
+#endif
+
 #ifdef WIFI
   WifiHandler wifiHandler(WIFI_SSID,
                           WIFI_PASS,
@@ -60,6 +73,6 @@ void loop() {
   }
 
 #ifdef DEBUG
-  printserialCache(&cache, &DEBUG);
+  // printserialCache(&cache, &DEBUG);
 #endif
 }

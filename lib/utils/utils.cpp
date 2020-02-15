@@ -198,3 +198,72 @@ float degToRad(float deg) {
   return deg / RAD_TO_DEG;
 }
 
+
+/*
+ * CODE FROM ardupilot 4.0
+ * prepare value for transmission through FrSky link
+ * for FrSky SPort Passthrough (OpenTX) protocol (X-receivers)
+ */
+uint16_t prepNumber(int32_t number, uint8_t digits, uint8_t power) {
+  uint16_t res = 0;
+  uint32_t abs_number = abs(number);
+
+  if ((digits == 2) && (power == 1)) { // number encoded on 8 bits: 7 bits for digits + 1 for 10^power
+      if (abs_number < 100) {
+          res = abs_number<<1;
+      } else if (abs_number < 1270) {
+          res = ((uint8_t)roundf(abs_number * 0.1f)<<1)|0x1;
+      } else { // transmit max possible value (0x7F x 10^1 = 1270)
+          res = 0xFF;
+      }
+      if (number < 0) { // if number is negative, add sign bit in front
+          res |= 0x1<<8;
+      }
+  } else if ((digits == 2) && (power == 2)) { // number encoded on 9 bits: 7 bits for digits + 2 for 10^power
+      if (abs_number < 100) {
+          res = abs_number<<2;
+      } else if (abs_number < 1000) {
+          res = ((uint8_t)roundf(abs_number * 0.1f)<<2)|0x1;
+      } else if (abs_number < 10000) {
+          res = ((uint8_t)roundf(abs_number * 0.01f)<<2)|0x2;
+      } else if (abs_number < 127000) {
+          res = ((uint8_t)roundf(abs_number * 0.001f)<<2)|0x3;
+      } else { // transmit max possible value (0x7F x 10^3 = 127000)
+          res = 0x1FF;
+      }
+      if (number < 0) { // if number is negative, add sign bit in front
+          res |= 0x1<<9;
+      }
+  } else if ((digits == 3) && (power == 1)) { // number encoded on 11 bits: 10 bits for digits + 1 for 10^power
+      if (abs_number < 1000) {
+          res = abs_number<<1;
+      } else if (abs_number < 10240) {
+          res = ((uint16_t)roundf(abs_number * 0.1f)<<1)|0x1;
+      } else { // transmit max possible value (0x3FF x 10^1 = 10240)
+          res = 0x7FF;
+      }
+      if (number < 0) { // if number is negative, add sign bit in front
+          res |= 0x1<<11;
+      }
+  } else if ((digits == 3) && (power == 2)) { // number encoded on 12 bits: 10 bits for digits + 2 for 10^power
+      if (abs_number < 1000) {
+          res = abs_number<<2;
+      } else if (abs_number < 10000) {
+          res = ((uint16_t)roundf(abs_number * 0.1f)<<2)|0x1;
+      } else if (abs_number < 100000) {
+          res = ((uint16_t)roundf(abs_number * 0.01f)<<2)|0x2;
+      } else if (abs_number < 1024000) {
+          res = ((uint16_t)roundf(abs_number * 0.001f)<<2)|0x3;
+      } else { // transmit max possible value (0x3FF x 10^3 = 127000)
+          res = 0xFFF;
+      }
+      if (number < 0) { // if number is negative, add sign bit in front
+          res |= 0x1<<12;
+      }
+  }
+  return res;
+}
+
+uint8_t sizeOfArray(uint16_t* arr) {
+  return sizeof(arr) / sizeof(arr[0]);
+}
