@@ -37,6 +37,8 @@
   #define FRSKY_SWSERIAL_TX_PIN       A9
   #define FC_SERIAL                   Serial2
   #define FC_SERIAL_BAUD              57600
+  // #define FRSKY_TELEMETRY_MODE_SPORT
+  #define FRSKY_TELEMETRY_MODE_PASSTHROUGH
   #define DEBUG                       Serial
   #define DEBUG_BAUD                  57600
 #endif
