@@ -1,9 +1,4 @@
 #include "settings.h"
-#include "mavlink-parser.h"
-#ifdef DEBUG
-  #include "utils.h"
-#endif
-#include "time.h"
 #ifdef FRSKY_TELEMETRY_MODE_PASSTHROUGH
   #include "frsky-pt-encoder.h"
 #else
@@ -33,11 +28,6 @@ MavlinkParser mav_parser(&cache, &FC_SERIAL);
 #endif
 
 void setup() {
-#ifdef DEBUG
-  DEBUG.begin(DEBUG_BAUD);
-  DEBUG.println("START SETUP");
-#endif
-
 #if defined HEARTHBEAT_TO_FC_LED_PIN && defined HEARTHBEAT_TO_FC_LED_PIN
   mav_parser.setLedsPins(HEARTHBEAT_TO_FC_LED_PIN,
                          HEARTHBEAT_FROM_FC_LED_PIN);
@@ -48,32 +38,27 @@ void setup() {
 #endif
 
   mav_parser.begin(FC_SERIAL_BAUD);
-
-#ifdef DEBUG
-  DEBUG.println("SETUP COMPLETE");
-#endif
 }
 
 void loop() {
+
 #ifdef WIFI
-  if (wifiHandler.isWifiON()) {
+  if (!armed(&cache)) {
+    if(!wifiHandler.isWifiOn()) {
+      wifiHandler.startAP();
+    }
     if (wifiHandler.isClientConnected()) {
       // Handle phone communication
-    } else if (armed(&cache)) {
-      wifiHandler.powerOff();
     }
-  } else {
-#else
-  if (true) {
-#endif
-    mav_parser.readFC();
-    delay(0);
-    mav_parser.sendHBToFC();
-    delay(0);
-    frsky_encoder.encode();
-    delay(0);
+  } else if(wifiHandler.isWifiOn()) {
+    wifiHandler.powerOff();
   }
-#ifdef DEBUG
-// printserialCache(&cache, &DEBUG);
 #endif
+
+  mav_parser.readFC();
+  delay(0);
+  mav_parser.sendHBToFC();
+  delay(0);
+  frsky_encoder.encode();
+  delay(0);
 }

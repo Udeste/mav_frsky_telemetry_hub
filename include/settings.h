@@ -1,4 +1,6 @@
 #include "Arduino.h"
+#include "mavlink-parser.h"
+#include "time.h"
 
 /**
  * Board specific settings
@@ -33,12 +35,10 @@
   #define HEARTHBEAT_TO_FC_LED_PIN    HAL_GPIO_C_LED_PIN
   #define HEARTHBEAT_FROM_FC_LED_PIN  HAL_GPIO_A_LED_PIN
   #define FRSKY_LED_PIN               HAL_GPIO_B_LED_PIN
-  #define FRSKY_SWSERIAL_RX_PIN       A8
-  #define FRSKY_SWSERIAL_TX_PIN       A9
+  #define FRSKY_SWSERIAL_RX_PIN       A9
+  #define FRSKY_SWSERIAL_TX_PIN       A8
   #define FC_SERIAL                   Serial2
   #define FC_SERIAL_BAUD              57600
   // #define FRSKY_TELEMETRY_MODE_SPORT
   #define FRSKY_TELEMETRY_MODE_PASSTHROUGH
-  #define DEBUG                       Serial
-  #define DEBUG_BAUD                  57600
 #endif
