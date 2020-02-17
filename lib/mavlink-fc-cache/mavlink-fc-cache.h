@@ -50,9 +50,9 @@ typedef struct {
 
   /* VFR_HUD Message https://mavlink.io/en/messages/common.html#VFR_HUD */
   float      vfr_hud_airspeed            = 0; //	m/s	Current indicated airspeed (IAS).
-  // float      vfr_hud_groundspeed         = 0; //	m/s	Current ground speed.
+  float      vfr_hud_groundspeed         = 0; //	m/s	Current ground speed.
   int16_t    vfr_hud_heading             = 0; //	deg	Current heading in compass units (0-360, 0=north).
-  // uint16_t   vfr_hud_throttle            = 0; //	%	Current throttle setting (0 to 100).
+  uint16_t   vfr_hud_throttle            = 0; //	%	Current throttle setting (0 to 100).
   float      vfr_hud_alt                 = 0; //	m	Current altitude (MSL).
   float      vfr_hud_climb               = 0; //	m/s	Current climb rate.
 

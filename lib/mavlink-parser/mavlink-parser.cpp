@@ -139,9 +139,9 @@ void MavlinkParser::parseATTITUDE(mavlink_message_t msg) {
 
 void MavlinkParser::parseVFR_HUD(mavlink_message_t msg) {
   cache->vfr_hud_airspeed     = mavlink_msg_vfr_hud_get_airspeed(&msg);
-  // cache->vfr_hud_groundspeed  = mavlink_msg_vfr_hud_get_groundspeed(&msg);
+  cache->vfr_hud_groundspeed  = mavlink_msg_vfr_hud_get_groundspeed(&msg);
   cache->vfr_hud_heading      = mavlink_msg_vfr_hud_get_heading(&msg);
-  // cache->vfr_hud_throttle     = mavlink_msg_vfr_hud_get_throttle(&msg);
+  cache->vfr_hud_throttle     = mavlink_msg_vfr_hud_get_throttle(&msg);
   cache->vfr_hud_alt          = mavlink_msg_vfr_hud_get_alt(&msg);
   cache->vfr_hud_climb        = mavlink_msg_vfr_hud_get_climb(&msg);
 }

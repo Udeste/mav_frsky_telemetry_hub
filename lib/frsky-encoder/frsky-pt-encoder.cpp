@@ -15,43 +15,47 @@ void FrSkyPassThroughEncoder::encode() {
  * Send Passthrough.
  */
 void FrSkyPassThroughEncoder::sendPT() {
-  switch (calcNextSensorToSend()) {
+  switch (next_sensor) {
     case FRSKY_PT_SENSOR_ID_STATUS_TEXT: // 0x5000 status text
-        // this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_STATUS_TEXT, calcNextStatusTextChunk());
-        break;
+      // this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_STATUS_TEXT, calcNextStatusTextChunk());
+      break;
     case FRSKY_PT_SENSOR_ID_AP_STATUS: // 0x5001 AP status
-        this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_AP_STATUS, calcApStatus());
-        break;
+      this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_AP_STATUS, calcApStatus());
+      break;
     case FRSKY_PT_SENSOR_ID_GPS_STATUS: // 0x5002 GPS Status
-        this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_GPS_STATUS, calcGPSStatus());
-        break;
+      this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_GPS_STATUS, calcGPSStatus());
+      break;
     case FRSKY_PT_SENSOR_ID_BATTERY_1: // 0x5003 Battery 1 status
-        this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_BATTERY_1, calcBattery1());
-        break;
+      this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_BATTERY_1, calcBattery1());
+      break;
     case FRSKY_PT_SENSOR_ID_HOME: // 0x5004 Home
-        // this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_HOME, calcHome());
-        break;
+      // this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_HOME, calcHome());
+      break;
     case FRSKY_PT_SENSOR_ID_VEL_YAW: // 0x5005 Vel and Yaw
-        this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_VEL_YAW, calcVelYaw());
-        break;
+      this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_VEL_YAW, calcVelYaw());
+      break;
     case FRSKY_PT_SENSOR_ID_ATT_RNG: // 0x5006 Attitude and range
-        this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_ATT_RNG, calcAttitude());
-        break;
+      this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_ATT_RNG, calcAttitude());
+      break;
     case FRSKY_PT_SENSOR_ID_PARAMETERS: // 0x5007 parameters
-        this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_PARAMETERS, calcParameters());
-        break;
+      this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_PARAMETERS, calcParameters());
+      break;
     case FRSKY_PT_SENSOR_ID_BATTERY_2: // 0x5008 Battery 2 status
-        // this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_BATTERY_2, calcBattery2());
-        break;
+      // this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_BATTERY_2, calcBattery2());
+      break;
     case FRSKY_PT_SENSOR_ID_GPS_LAT: // 0x800 GPS lat
-        this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_LONG_LATI_FIRST, mavToFrskyGPS(this->cache->global_pos_int_lat, true));
-        break;
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_LONG_LATI_FIRST, mavToFrskyGPS(this->cache->global_pos_int_lat, true));
+      break;
     case FRSKY_PT_SENSOR_ID_GPS_LON: // 0x801 GPS lon
-        this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_LONG_LATI_FIRST, mavToFrskyGPS(this->cache->global_pos_int_lat, false));
-        break;
+      this->frsky_s_port->sendData(FRSKY_SENSOR_ID_GPS_LONG_LATI_FIRST, mavToFrskyGPS(this->cache->global_pos_int_lat, false));
+      break;
+    case FRSKY_PT_SENSOR_ID_VFR_HUD: // 0x50F2 VFR
+      this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_VFR_HUD, calcVFRHud());
+      break;
     default:
       break;
   }
+  next_sensor = calcNextSensorToSend();
 }
 
 uint32_t FrSkyPassThroughEncoder::calcGPSStatus() {
@@ -102,7 +106,7 @@ uint32_t FrSkyPassThroughEncoder::calcVelYaw() {
   // vertical velocity in dm/s
   uint16_t v_vel = prepNumber(cache->vfr_hud_climb * 10, 2, 1);
   // horizontal velocity in dm/s
-  uint16_t h_vel = prepNumber(cache->vfr_hud_airspeed * 10, 2, 1);
+  uint16_t h_vel = prepNumber(cache->vfr_hud_groundspeed * 10, 2, 1);
   // yaw from [0;36000] centidegrees to .2 degree increments [0;1800]
   uint16_t yaw = (uint16_t)((cache->vfr_hud_heading * 10) * 0.5f);
   yaw &= VELANDYAW_YAW_LIMIT; // (just in case, limit to 2047 (0x7FF) since the value is stored on 11 bits)
@@ -169,26 +173,26 @@ uint32_t FrSkyPassThroughEncoder::calcBattery1() {
   return battery_status;
 }
 
+uint32_t FrSkyPassThroughEncoder::calcVFRHud() {
+ uint16_t air_speed = prepNumber(roundf(cache->vfr_hud_airspeed * 10), 2, 1);
+ uint16_t throttle  = cache->vfr_hud_throttle;
+ uint16_t baro_alt  = prepNumber(roundf(cache->vfr_hud_alt * 10), 3, 2);
+
+ uint32_t vfr = 0;
+ vfr |= (uint32_t)air_speed << 0;
+ vfr |= (uint32_t)throttle  << 8;
+ vfr |= (uint32_t)baro_alt  << 15;
+ vfr |= (uint32_t)(baro_alt < 0 ? 1 : 0) << 27;
+ return vfr;
+}
+
 uint16_t FrSkyPassThroughEncoder::calcNextSensorToSend() {
-  uint16_t nextSens = 0;
-  if ((sizeOfArray(this->low_timing) > 0) &&
-      ((millis() - last_low_timing_ms) > LOW_TIMING_MS)) {
-    nextSens = this->low_timing[this->sensor_polls[5]];
-    this->updateSensorPollsCount(5, sizeOfArray(this->low_timing) - 1);
-    last_low_timing_ms = millis();
-  } else if ((sizeOfArray(this->mid_timing) > 0) &&
-      ((millis() - last_mid_timing_ms) > MID_TIMING_MS)) {
-    nextSens = this->mid_timing[this->sensor_polls[6]];
-    this->updateSensorPollsCount(6, sizeOfArray(this->mid_timing) - 1);
-    last_mid_timing_ms = millis();
-  } else if ((sizeOfArray(this->high_timing) > 0) &&
-      ((millis() - last_high_timing_ms) > HIGH_TIMING_MS)) {
-    nextSens = this->high_timing[this->sensor_polls[7]];
-    this->updateSensorPollsCount(7, sizeOfArray(this->high_timing) - 1);
-    last_high_timing_ms = millis();
-  } else if ((sizeOfArray(this->live_timing) > 0)) {
-    nextSens = this->live_timing[this->sensor_polls[8]];
-    this->updateSensorPollsCount(8, sizeOfArray(this->live_timing) - 1);
+  for (uint8_t i=0; i<NUM_SENSORS; i++) {
+    if (millis() - sensor_last_ms[i] > sensors_priority[i]) {
+      sensor_last_ms[i] = millis();
+      return sensors_map[i];
+    }
   }
-  return nextSens;
+  // Send again last sensor if no one is found
+  return next_sensor;
 }
