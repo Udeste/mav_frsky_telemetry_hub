@@ -39,6 +39,7 @@
   #define FRSKY_SWSERIAL_TX_PIN       A8
   #define FC_SERIAL                   Serial2
   #define FC_SERIAL_BAUD              57600
-  // #define FRSKY_TELEMETRY_MODE_SPORT
-  #define FRSKY_TELEMETRY_MODE_PASSTHROUGH
 #endif
+
+// #define FRSKY_TELEMETRY_MODE_SPORT
+#define FRSKY_TELEMETRY_MODE_PASSTHROUGH
