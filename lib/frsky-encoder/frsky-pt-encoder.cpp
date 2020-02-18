@@ -143,9 +143,9 @@ uint32_t FrSkyPassThroughEncoder::calcApStatus() {
 }
 
 uint32_t FrSkyPassThroughEncoder::calcParameters() {
-  // reuse sensor_polls array with id 28 as counter
+  // reuse sensor_polls array with id 27 as counter
   uint32_t param = 0;
-  uint16_t param_id = this->sensor_polls[28] + 1;
+  uint16_t param_id = this->sensor_polls[27] + 1;
   switch(param_id) {
     case 1: param |= cache->hb_type; break;
     case 2: // was used to send the battery failsafe voltage
@@ -156,7 +156,7 @@ uint32_t FrSkyPassThroughEncoder::calcParameters() {
   }
   param |= (uint32_t)(param_id) << 24;
 
-  this->updateSensorPollsCount(28, 4);
+  this->updateSensorPollsCount(27, 4);
 
   return param;
 }
