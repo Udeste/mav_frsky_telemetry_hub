@@ -1,7 +1,11 @@
-#include "Arduino.h"
-
 #ifndef MAVLINK_FC_CACHE
 #define MAVLINK_FC_CACHE
+
+#include "Arduino.h"
+#include "CircularBuffer.h"
+#undef F
+#include "common/mavlink.h"
+
 typedef struct {
   /* HEARTBEAT Message from FC https://mavlink.io/en/messages/common.html#HEARTBEAT */
   uint8_t    hb_type                = 0; // https://mavlink.io/en/messages/common.html#MAV_TYPE
@@ -12,9 +16,11 @@ typedef struct {
   // uint8_t    hb_mavlink_version     = 0; // https://mavlink.io/en/messages/common.html#MAV_STATE
 
   /* STATUSTEXT Message https://mavlink.io/en/messages/common.html#STATUSTEXT */
-  uint8_t    status_severity		 = 0;  //https://mavlink.io/en/messages/common.html#MAV_SEVERITY
-  char       status_text[50]     = ""; //Status text message, without null termination character
-  uint16_t   status_text_len     = 0;
+  // uint8_t    status_severity		 = 0;  //https://mavlink.io/en/messages/common.html#MAV_SEVERITY
+  // char       status_text[50]     = ""; //Status text message, without null termination character
+  // uint16_t   status_text_len     = 0;
+
+  CircularBuffer<mavlink_statustext_t, 20> status_text_buff;
 
   /* SYS_STATUS Message https://mavlink.io/en/messages/common.html#SYS_STATUS */
   uint32_t   sys_onbrd_ctrl_sens_hlth = 0; //https://mavlink.io/en/messages/common.html#MAV_SYS_STATUS_SENSOR

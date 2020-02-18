@@ -1,3 +1,6 @@
+#ifndef MAVLINK_PARSER
+#define MAVLINK_PARSER
+
 #include "mavlink-fc-cache.h"
 #undef F
 #include <common/mavlink.h>
@@ -49,3 +52,5 @@ class MavlinkParser {
   void    parseSCALED_PRESSURE       (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#SCALED_PRESSURE
   void    parseBATTERY_STATUS        (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#BATTERY_STATUS
 };
+
+#endif

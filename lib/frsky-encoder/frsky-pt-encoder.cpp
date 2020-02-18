@@ -16,9 +16,6 @@ void FrSkyPassThroughEncoder::encode() {
  */
 void FrSkyPassThroughEncoder::sendPT() {
   switch (next_sensor) {
-    case FRSKY_PT_SENSOR_ID_STATUS_TEXT: // 0x5000 status text
-      // this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_STATUS_TEXT, calcNextStatusTextChunk());
-      break;
     case FRSKY_PT_SENSOR_ID_AP_STATUS: // 0x5001 AP status
       this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_AP_STATUS, calcApStatus());
       break;
@@ -34,6 +31,13 @@ void FrSkyPassThroughEncoder::sendPT() {
     case FRSKY_PT_SENSOR_ID_VEL_YAW: // 0x5005 Vel and Yaw
       this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_VEL_YAW, calcVelYaw());
       break;
+    case FRSKY_PT_SENSOR_ID_STATUS_TEXT: { // 0x5000 status text
+      uint32_t chunk = calcNextStatusTextChunk();
+      if (chunk) {
+        this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_STATUS_TEXT, chunk);
+        break;
+      }
+    }
     case FRSKY_PT_SENSOR_ID_ATT_RNG: // 0x5006 Attitude and range
       this->frsky_s_port->sendData(FRSKY_PT_SENSOR_ID_ATT_RNG, calcAttitude());
       break;
@@ -56,6 +60,40 @@ void FrSkyPassThroughEncoder::sendPT() {
       break;
   }
   next_sensor = calcNextSensorToSend();
+}
+
+uint32_t FrSkyPassThroughEncoder::calcNextStatusTextChunk() {
+
+  if (!status_text_available) {
+    if (cache->status_text_buff.isEmpty()) return 0;
+    parsing_text = cache->status_text_buff.shift();
+    status_text_available = true;
+    char_index = 0;
+  }
+
+  if (status_text_available) {
+    uint32_t chunk = 0;
+    uint8_t character = 0;
+    for (int i = 3; i > -1 && char_index < sizeof(parsing_text.text); i--) {
+      character = parsing_text.text[char_index++];
+
+      if(!character) {
+        break;
+      }
+      chunk |= (uint32_t)character << i * 8;
+    }
+
+    if (!character || char_index == sizeof(parsing_text.text)) {
+      char_index = 0;
+      status_text_available = false;
+      chunk |= (uint32_t)(parsing_text.severity & 0x4) << 21;
+      chunk |= (uint32_t)(parsing_text.severity & 0x2) << 14;
+      chunk |= (uint32_t)(parsing_text.severity & 0x1) << 7;
+    }
+    return chunk;
+  }
+
+  return 0;
 }
 
 uint32_t FrSkyPassThroughEncoder::calcGPSStatus() {

@@ -34,6 +34,10 @@ class FrSkyPassThroughEncoder: public FrSkyEncoder {
   // Inital sensor to send whenever the communication begin
   uint16_t  next_sensor = FRSKY_PT_SENSOR_ID_PARAMETERS;
 
+  uint8_t              char_index = 0;
+  bool                 status_text_available = false;
+  mavlink_statustext_t parsing_text;
+
   #define NUM_SENSORS 11
 
   uint16_t  sensors_map[NUM_SENSORS] = {
@@ -46,12 +50,12 @@ class FrSkyPassThroughEncoder: public FrSkyEncoder {
     FRSKY_PT_SENSOR_ID_GPS_STATUS,
     FRSKY_PT_SENSOR_ID_GPS_LAT,
     FRSKY_PT_SENSOR_ID_GPS_LON,
-    FRSKY_PT_SENSOR_ID_STATUS_TEXT,
     FRSKY_PT_SENSOR_ID_BATTERY_1,
     FRSKY_PT_SENSOR_ID_AP_STATUS,
     FRSKY_PT_SENSOR_ID_VEL_YAW,
     FRSKY_PT_SENSOR_ID_VFR_HUD,
-    FRSKY_PT_SENSOR_ID_ATT_RNG
+    FRSKY_PT_SENSOR_ID_ATT_RNG,
+    FRSKY_PT_SENSOR_ID_STATUS_TEXT
   };
 
   // timings, in ms
@@ -65,16 +69,17 @@ class FrSkyPassThroughEncoder: public FrSkyEncoder {
     900,  // FRSKY_PT_SENSOR_ID_GPS_STATUS
     820,  // FRSKY_PT_SENSOR_ID_GPS_LAT
     800,  // FRSKY_PT_SENSOR_ID_GPS_LON
-    750,  // FRSKY_PT_SENSOR_ID_STATUS_TEXT
     700,  // FRSKY_PT_SENSOR_ID_BATTERY_1
     500,  // FRSKY_PT_SENSOR_ID_AP_STATUS
     300,  // FRSKY_PT_SENSOR_ID_VEL_YAW
     130,  // FRSKY_PT_SENSOR_ID_VFR_HUD
-    50    // FRSKY_PT_SENSOR_ID_ATT_RNG
+    50,   // FRSKY_PT_SENSOR_ID_ATT_RNG
+    20    // FRSKY_PT_SENSOR_ID_STATUS_TEXT
   };
 
   void      sendPT();
   uint16_t  calcNextSensorToSend();
+  uint32_t  calcNextStatusTextChunk();
   uint32_t  calcApStatus();
   uint32_t  calcParameters();
   uint32_t  calcGPSStatus();

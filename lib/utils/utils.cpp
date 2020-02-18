@@ -39,11 +39,11 @@ void printserialCache(mavlink_fc_cache_t* cache, HardwareSerial* serial) {
     serial->println();
 
     serial->print(">>> STATUSTEXT >>>   ");
-    serial->print("severity=");
-    serial->print(cache->status_severity);
-    serial->print(" | ");
-    serial->print("text=");
-    serial->print(cache->status_text);
+    // serial->print("severity=");
+    // serial->print(cache->status_severity);
+    // serial->print(" | ");
+    // serial->print("text=");
+    // serial->print(cache->status_text);
 
     serial->println();
 

@@ -110,8 +110,10 @@ void MavlinkParser::parseHBFromFC(mavlink_message_t msg) {
 }
 
 void MavlinkParser::parseSTATUSTEXT(mavlink_message_t msg) {
-  cache->status_severity  = mavlink_msg_statustext_get_severity(&msg);
-  cache->status_text_len  = mavlink_msg_statustext_get_text(&msg, cache->status_text);
+  mavlink_statustext_t status_text;
+  status_text.severity  = mavlink_msg_statustext_get_severity(&msg);
+  mavlink_msg_statustext_get_text(&msg, status_text.text);
+  cache->status_text_buff.push(status_text);
 }
 
 void MavlinkParser::parseSYS_STATUS(mavlink_message_t msg) {
