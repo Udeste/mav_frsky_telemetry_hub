@@ -10,7 +10,6 @@
     // Espressif SDK
     #include "user_interface.h"
   }
-  #include "WifiHandler.h"
   #define WIFI
   #define WIFI_SSID                   "..::Ardupilot::.."
   #define WIFI_PASS                   "ardupilot"

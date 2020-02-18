@@ -1,4 +1,8 @@
 #include "settings.h"
+#ifdef WIFI
+  #include "wifi-handler.h"
+  #include "upd-bridge.h"
+#endif
 #ifdef FRSKY_TELEMETRY_MODE_PASSTHROUGH
   #include "frsky-pt-encoder.h"
 #else
