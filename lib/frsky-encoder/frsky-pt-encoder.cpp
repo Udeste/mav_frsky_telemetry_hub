@@ -188,8 +188,8 @@ uint32_t FrSkyPassThroughEncoder::calcVFRHud() {
 
 uint16_t FrSkyPassThroughEncoder::calcNextSensorToSend() {
   for (uint8_t i=0; i<NUM_SENSORS; i++) {
-    if (millis() - sensor_last_ms[i] > sensors_priority[i]) {
-      sensor_last_ms[i] = millis();
+    if (millis() - sensor_polls[i] > sensors_timings[i]) {
+      sensor_polls[i] = millis();
       return sensors_map[i];
     }
   }

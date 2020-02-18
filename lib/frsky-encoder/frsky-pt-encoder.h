@@ -54,9 +54,8 @@ class FrSkyPassThroughEncoder: public FrSkyEncoder {
     FRSKY_PT_SENSOR_ID_ATT_RNG
   };
 
-  // The lower the higher priority
-  // in milliseconds
-  uint16_t  sensors_priority[NUM_SENSORS] = {
+  // timings, in ms
+  uint16_t  sensors_timings[NUM_SENSORS] = {
     // 0, // FRSKY_PT_SENSOR_ID_WIND
     // 0, // FRSKY_PT_SENSOR_ID_BATTERY_2
     // 0, // FRSKY_PT_SENSOR_ID_SERVO_RAW
@@ -73,25 +72,6 @@ class FrSkyPassThroughEncoder: public FrSkyEncoder {
     130,  // FRSKY_PT_SENSOR_ID_VFR_HUD
     50    // FRSKY_PT_SENSOR_ID_ATT_RNG
   };
-
-  uint32_t  sensor_last_ms[NUM_SENSORS] = {
-    // 0, // FRSKY_PT_SENSOR_ID_WIND
-    // 0, // FRSKY_PT_SENSOR_ID_BATTERY_2
-    // 0, // FRSKY_PT_SENSOR_ID_SERVO_RAW
-    // 0, // FRSKY_PT_SENSOR_ID_WAYPOINTS_MISSIONS
-    0, // FRSKY_PT_SENSOR_ID_PARAMETERS
-    0, // FRSKY_PT_SENSOR_ID_HOME
-    0, // FRSKY_PT_SENSOR_ID_GPS_STATUS
-    0, // FRSKY_PT_SENSOR_ID_GPS_LAT
-    0, // FRSKY_PT_SENSOR_ID_GPS_LON
-    0, // FRSKY_PT_SENSOR_ID_STATUS_TEXT
-    0, // FRSKY_PT_SENSOR_ID_BATTERY_1
-    0, // FRSKY_PT_SENSOR_ID_AP_STATUS
-    0, // FRSKY_PT_SENSOR_ID_VEL_YAW
-    0, // FRSKY_PT_SENSOR_ID_VFR_HUD
-    0, // FRSKY_PT_SENSOR_ID_ATT_RNG
-  };
-
 
   void      sendPT();
   uint16_t  calcNextSensorToSend();

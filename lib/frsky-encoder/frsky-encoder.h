@@ -16,7 +16,7 @@ class FrSkyEncoder {
   protected:
   mavlink_fc_cache_t*   cache;
   FrskySPort*           frsky_s_port;
-  uint16_t              sensor_polls[28] = {
+  uint32_t              sensor_polls[28] = {
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
   };
 
