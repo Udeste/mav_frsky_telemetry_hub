@@ -14,10 +14,11 @@
   #define WIFI_SSID                   "..::Ardupilot::.."
   #define WIFI_PASS                   "ardupilot"
   #define WIFI_CHAN                   9
+  #define UDP_LOCAL_PORT              14550
   #define FRSKY_SWSERIAL_RX_PIN       12
   #define FRSKY_SWSERIAL_TX_PIN       14
   #define FC_SERIAL                   Serial
-  #define FC_SERIAL_BAUD              57600
+  #define FC_SERIAL_BAUD              921600
   #define FRSKY_LED_PIN               LED_BUILTIN
 #elif defined(__AVR_ATmega328P__)
   // #define HEARTHBEAT_TO_FC_LED_PIN    HAL_GPIO_C_LED_PIN

@@ -7,7 +7,7 @@ MavlinkParser::MavlinkParser(mavlink_fc_cache_t* cache,  HardwareSerial* serial)
 }
 
 void MavlinkParser::setLedsPins(uint16_t hb_to_fc_led, uint16_t hb_frm_fc_led) {
-  this->hb_to_fc_led_pin = hb_to_fc_led;
+  this->hb_to_fc_led_pin   = hb_to_fc_led;
   this->hb_from_fc_led_pin = hb_frm_fc_led;
   pinMode(this->hb_to_fc_led_pin,   OUTPUT);
   pinMode(this->hb_from_fc_led_pin, OUTPUT);
@@ -15,16 +15,20 @@ void MavlinkParser::setLedsPins(uint16_t hb_to_fc_led, uint16_t hb_frm_fc_led) {
 
 void MavlinkParser::begin(unsigned long baud) {
   serial->begin(baud);
-  // serial->setRxBufferSize(4096);
+#if defined ESP8266
+  serial->setRxBufferSize(4096);
+#endif
+  memset(&message, 0, sizeof(message));
+  memset(&status,  0, sizeof(status));
 }
 
 void MavlinkParser::readFC() {
-  mavlink_status_t status;
-  mavlink_message_t message;
   while (serial->available()) {
     uint16_t byte = serial->read();
     if (mavlink_parse_char(MAVLINK_COMM_0, byte, &message, &status)) {
       parseMavlinkMsg(message);
+      memset(&message, 0, sizeof(message));
+      memset(&status,  0, sizeof(status));
     }
   }
 }

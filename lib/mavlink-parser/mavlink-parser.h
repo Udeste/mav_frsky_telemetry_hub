@@ -30,6 +30,8 @@ class MavlinkParser {
  private:
   mavlink_fc_cache_t*   cache;
   HardwareSerial*     serial;
+  mavlink_status_t    status;
+  mavlink_message_t   message;
   uint8_t             fc_buff[300]        = {};
   uint32_t            last_hb_to_fc_ms    = 0;
   uint32_t            last_hb_from_fc_ms  = 0;

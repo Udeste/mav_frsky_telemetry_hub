@@ -26,9 +26,10 @@ MavlinkParser mav_parser(&cache, &FC_SERIAL);
 #endif
 
 #ifdef WIFI
-  WifiHandler wifiHandler(WIFI_SSID,
-                          WIFI_PASS,
-                          WIFI_CHAN);
+  WifiHandler wifi_handler(WIFI_SSID,
+                           WIFI_PASS,
+                           WIFI_CHAN);
+  UDPBridge udp_bridge(&FC_SERIAL);
 #endif
 
 void setup() {
@@ -38,25 +39,38 @@ void setup() {
 #endif
 
 #ifdef WIFI
-  wifiHandler.disconnect();
+  wifi_handler.disconnect();
 #endif
 
   mav_parser.begin(FC_SERIAL_BAUD);
+  wifi_handler.startAP();
 }
 
 void loop() {
 
 #ifdef WIFI
   if (!armed(&cache)) {
-    if(!wifiHandler.isWifiOn()) {
-      wifiHandler.startAP();
+    if(!wifi_handler.isWifiON()) {
+      wifi_handler.startAP();
     }
-    if (wifiHandler.isClientConnected()) {
-      // Handle phone communication
+    if (wifi_handler.isClientConnected()) {
+      if (!udp_bridge.initialized) {
+        udp_bridge.begin(UDP_LOCAL_PORT);
+      } else {
+        if(udp_bridge.readGCS())
+          udp_bridge.writeFC();
+        delay(0);
+        if(udp_bridge.readFC())
+          udp_bridge.writeGCS();
+      }
+    } else {
+      delay(500);
     }
-  } else if(wifiHandler.isWifiOn()) {
-    wifiHandler.powerOff();
-  }
+  } else {
+    if(wifi_handler.isWifiON()) {
+      udp_bridge.stop();
+      wifi_handler.powerOff();
+    }
 #endif
 
   mav_parser.readFC();
@@ -65,4 +79,8 @@ void loop() {
   delay(0);
   frsky_encoder.encode();
   delay(0);
+
+#ifdef WIFI
+  }
+#endif
 }
