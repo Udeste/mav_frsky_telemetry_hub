@@ -21,27 +21,20 @@
 
 class MavlinkParser {
  public:
-  MavlinkParser              (mavlink_fc_cache_t* cache, HardwareSerial* serial);
-  void    begin              (unsigned long baud);
-  void    readFC             ();
-  void    sendHBToFC         ();
-  void    setLedsPins        (uint16_t hb_to_fc_led, uint16_t hb_frm_fc_led);
+  MavlinkParser                       (mavlink_fc_cache_t* cache);
+  void                setLedsPins     (uint16_t hb_to_fc_led, uint16_t hb_frm_fc_led);
+  void                parseMavlinkMsg (mavlink_message_t msg);
+  bool                makeHBMessage   (mavlink_message_t* msg);
 
  private:
   mavlink_fc_cache_t*   cache;
-  HardwareSerial*     serial;
-  mavlink_status_t    status;
-  mavlink_message_t   message;
-  uint8_t             fc_buff[300]        = {};
-  uint32_t            last_hb_to_fc_ms    = 0;
-  uint32_t            last_hb_from_fc_ms  = 0;
-  uint16_t            hb_from_fc_led_pin  = 0;
-  uint16_t            hb_to_fc_led_pin    = 0;
-  uint32_t            hb_from_fc_count    = 0;
-  uint32_t            hb_to_fc_count      = 0;
+  uint32_t              last_hb_to_fc_ms    = 0;
+  uint32_t              last_hb_from_fc_ms  = 0;
+  uint16_t              hb_from_fc_led_pin  = 0;
+  uint16_t              hb_to_fc_led_pin    = 0;
+  uint32_t              hb_from_fc_count    = 0;
+  uint32_t              hb_to_fc_count      = 0;
 
-  void    writeToFC                  (mavlink_message_t msg);
-  void    parseMavlinkMsg            (mavlink_message_t msg);
   void    parseHBFromFC              (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#HEARTBEAT
   void    parseSTATUSTEXT            (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#STATUSTEXT
   void    parseSYS_STATUS            (mavlink_message_t msg); // https://mavlink.io/en/messages/common.html#SYS_STATUS

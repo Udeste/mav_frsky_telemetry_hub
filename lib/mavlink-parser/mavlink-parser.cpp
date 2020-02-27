@@ -1,9 +1,8 @@
 #include "mavlink-parser.h"
 #include "utils.h"
 
-MavlinkParser::MavlinkParser(mavlink_fc_cache_t* cache,  HardwareSerial* serial) {
+MavlinkParser::MavlinkParser(mavlink_fc_cache_t* cache) {
   this->cache = cache;
-  this->serial = serial;
 }
 
 void MavlinkParser::setLedsPins(uint16_t hb_to_fc_led, uint16_t hb_frm_fc_led) {
@@ -11,26 +10,6 @@ void MavlinkParser::setLedsPins(uint16_t hb_to_fc_led, uint16_t hb_frm_fc_led) {
   this->hb_from_fc_led_pin = hb_frm_fc_led;
   pinMode(this->hb_to_fc_led_pin,   OUTPUT);
   pinMode(this->hb_from_fc_led_pin, OUTPUT);
-}
-
-void MavlinkParser::begin(unsigned long baud) {
-  serial->begin(baud);
-#if defined ESP8266
-  serial->setRxBufferSize(4096);
-#endif
-  memset(&message, 0, sizeof(message));
-  memset(&status,  0, sizeof(status));
-}
-
-void MavlinkParser::readFC() {
-  while (serial->available()) {
-    uint16_t byte = serial->read();
-    if (mavlink_parse_char(MAVLINK_COMM_0, byte, &message, &status)) {
-      parseMavlinkMsg(message);
-      memset(&message, 0, sizeof(message));
-      memset(&status,  0, sizeof(status));
-    }
-  }
 }
 
 void MavlinkParser::parseMavlinkMsg(mavlink_message_t message) {
@@ -215,27 +194,23 @@ void MavlinkParser::parseBATTERY_STATUS(mavlink_message_t msg) {
   // cache->battery_charge_state     = mavlink_msg_battery_status_get_charge_state(&msg);
 }
 
-void MavlinkParser::sendHBToFC() {
+bool MavlinkParser::makeHBMessage(mavlink_message_t* msg) {
   if (millis() - last_hb_to_fc_ms > HEARTBEAT_TO_FC_MS) {
     turnLedON(this->hb_to_fc_led_pin);
 
-    mavlink_message_t message;
+    memset(msg, 0, sizeof(*msg));
     mavlink_msg_heartbeat_pack(BRIDGE_SYSTEM_ID,
                                BRIDGE_COMPONENT_ID,
-                               &message,
+                               msg,
                                BRIDGE_TYPE,
                                BRIDGE_AUTOPILOT,
                                BRIDGE_BASE_MODE,
                                BRIDGE_SYSTEM_STATE,
                                0);
-    writeToFC(message);
     last_hb_to_fc_ms = millis();
-  if (hb_to_fc_count++ % 2 == 0 )
-    turnLedOFF(this->hb_to_fc_led_pin);
+    if (hb_to_fc_count++ % 2 == 0 )
+      turnLedOFF(this->hb_to_fc_led_pin);
+    return true;
   }
-}
-
-void MavlinkParser::writeToFC(mavlink_message_t msg) {
-  uint16_t len = mavlink_msg_to_send_buffer(fc_buff, &msg);
-  serial->write(fc_buff, len);
+  return false;
 }
