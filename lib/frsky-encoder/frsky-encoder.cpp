@@ -1,12 +1,15 @@
 #include "frsky-encoder.h"
 
 FrSkyEncoder::FrSkyEncoder(mavlink_fc_cache_t* cache,
-                           uint16_t rx_pin,
-                           uint16_t tx_pin,
-                           uint16_t led_pin) {
+                           uint8_t rx_pin,
+                           uint8_t tx_pin) {
   this->cache = cache;
   this->frsky_s_port = new FrskySPort(rx_pin, tx_pin);
+}
+
+void FrSkyEncoder::begin(uint8_t led_pin) {
   this->frsky_s_port->setLedPin(led_pin);
+  this->frsky_s_port->begin();
 }
 
 void FrSkyEncoder::updateSensorPollsCount(uint16_t index, uint16_t max) {

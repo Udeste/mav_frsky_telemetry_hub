@@ -1,7 +1,7 @@
 #include "frsky-sport-encoder.h"
 
 void FrSkySPortEncoder::encode() {
-  while (this->frsky_s_port->available()) {
+  while (this->frsky_s_port->available() >= 2) {
     if (this->frsky_s_port->read() == FRSKY_POLL_HEADER) {
        while (this->frsky_s_port->available()) {
         switch (this->frsky_s_port->read()) {

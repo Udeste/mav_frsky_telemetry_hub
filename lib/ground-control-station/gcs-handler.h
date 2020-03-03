@@ -29,8 +29,6 @@ class GCShandler {
   mavlink_status_t    status;
   uint8_t             buff[BUFFER_SIZE] = {};
   WiFiUDP             udp;
-  IPAddress           client_ip;
-  uint16_t            client_port;
 };
 
 #endif

@@ -1,7 +1,7 @@
 #include "frsky-pt-encoder.h"
 
 void FrSkyPassThroughEncoder::encode() {
-  while (this->frsky_s_port->available())
+  while (this->frsky_s_port->available() >= 2)
     if (this->frsky_s_port->read() == FRSKY_POLL_HEADER)
       while (this->frsky_s_port->available())
         if (this->frsky_s_port->read() == FRSKY_POLL_ID_FUEL)

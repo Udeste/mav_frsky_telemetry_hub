@@ -22,13 +22,11 @@ MavlinkParser           mav_parser(&cache);
 #ifdef FRSKY_TELEMETRY_MODE_PASSTHROUGH
   FrSkyPassThroughEncoder frsky_encoder(&cache,
                                         FRSKY_SWSERIAL_RX_PIN,
-                                        FRSKY_SWSERIAL_TX_PIN,
-                                        FRSKY_LED_PIN);
+                                        FRSKY_SWSERIAL_TX_PIN);
 #else
   FrSkySPortEncoder frsky_encoder(&cache,
                                   FRSKY_SWSERIAL_RX_PIN,
-                                  FRSKY_SWSERIAL_TX_PIN,
-                                  FRSKY_LED_PIN);
+                                  FRSKY_SWSERIAL_TX_PIN);
 #endif
 
 #ifdef WIFI
@@ -45,15 +43,17 @@ void setup() {
 #endif
 
   fc_handler.begin(FC_SERIAL_BAUD);
+
+  frsky_encoder.begin();
+  wifi_handler.disconnect();
+  wifi_handler.powerOff();
 }
 
 void loop() {
   mav_pkt_available = fc_handler.read(&mav_message);
   if (mav_pkt_available) {
     mav_parser.parseMavlinkMsg(mav_message);
-    delay(0);
     frsky_encoder.encode();
-    delay(0);
   }
 
 #ifdef WIFI
@@ -73,8 +73,6 @@ void loop() {
     if (mav_pkt_available)
       gcs_handler.write(mav_message);
 
-    delay(0);
-
     if (gcs_handler.read(&gcs_message))
       fc_handler.write(gcs_message);
 
@@ -86,6 +84,5 @@ void loop() {
 #endif
   if (mav_parser.makeHBMessage(&mav_message)) {
     fc_handler.write(mav_message);
-    delay(0);
   }
 }

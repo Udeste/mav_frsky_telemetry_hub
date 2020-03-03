@@ -7,9 +7,9 @@
 class FrSkyEncoder {
   public:
   FrSkyEncoder          (mavlink_fc_cache_t* cache,
-                         uint16_t rx_pin,
-                         uint16_t tx_pin,
-                         uint16_t led_pin = LED_BUILTIN);
+                         uint8_t rx_pin,
+                         uint8_t tx_pin);
+  void                  begin(uint8_t led_pin = LED_BUILTIN);
 
   virtual void encode() = 0;
 
