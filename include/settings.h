@@ -1,7 +1,3 @@
-#include "Arduino.h"
-#include "mavlink-parser.h"
-#include "time.h"
-
 /**
  * Board specific settings
  */
@@ -10,9 +6,7 @@
     // Espressif SDK
     #include "user_interface.h"
   }
-  #define WIFI
-  #define WIFI_SSID                   "..::Ardupilot::.."
-  #define WIFI_PASS                   "ardupilot"
+
   #define WIFI_CHAN                   9
   #define UDP_LOCAL_PORT              14550
   #define FRSKY_SWSERIAL_RX_PIN       12

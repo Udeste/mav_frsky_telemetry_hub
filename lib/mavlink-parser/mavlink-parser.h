@@ -2,10 +2,6 @@
 #define MAVLINK_PARSER
 
 #include "mavlink-fc-cache.h"
-#undef F
-#include <common/mavlink.h>
-#include <mavlink_types.h>
-#include <ardupilotmega/ardupilotmega.h>
 
 /**
  * Mavlink configuration for this parser

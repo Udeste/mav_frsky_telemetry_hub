@@ -1,3 +1,5 @@
+#ifdef WIFI
+
 #include "gcs-handler.h"
 
 GCShandler::GCShandler(uint16_t local_port) {
@@ -50,3 +52,5 @@ void GCShandler::write(mavlink_message_t msg) {
     udp.endPacket();
   }
 }
+
+#endif

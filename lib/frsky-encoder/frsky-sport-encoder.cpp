@@ -6,7 +6,7 @@ void FrSkySPortEncoder::encode() {
        while (this->frsky_s_port->available()) {
         switch (this->frsky_s_port->read()) {
           case FRSKY_POLL_ID_VARIO:  this->sendVario();  break;
-          // case FRSKY_POLL_ID_FLVSS:                      break; /* Real MLVSS present on the S-Port bus. No need to send data from FC*/
+          // case FRSKY_POLL_ID_FLVSS:  /* Real MLVSS present on the S-Port bus. No need to send data from FC*/
           case FRSKY_POLL_ID_FAS:    this->sendFAS();    break;
           case FRSKY_POLL_ID_GPS:    this->sendGPS();    break;
           // case FRSKY_POLL_ID_RPM:

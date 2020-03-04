@@ -1,5 +1,8 @@
 #include "settings.h"
+#include "Arduino.h"
+#include "mavlink-parser.h"
 #include "fc-handler.h"
+
 #ifdef WIFI
   #include "wifi-handler.h"
   #include "gcs-handler.h"
@@ -16,7 +19,11 @@ mavlink_message_t       gcs_message;
 bool                    mav_pkt_available = false;
 
 FCHandler               fc_handler(&FC_SERIAL);
-GCShandler              gcs_handler(UDP_LOCAL_PORT);
+
+#ifdef WIFI
+  GCShandler              gcs_handler(UDP_LOCAL_PORT);
+#endif
+
 MavlinkParser           mav_parser(&cache);
 
 #ifdef FRSKY_TELEMETRY_MODE_PASSTHROUGH
@@ -30,7 +37,7 @@ MavlinkParser           mav_parser(&cache);
 #endif
 
 #ifdef WIFI
-  WifiHandler wifi_handler(WIFI_SSID,
+  ESP8266WifiHandler wifi_handler(WIFI_SSID,
                            WIFI_PASS,
                            WIFI_CHAN);
 #endif
@@ -43,10 +50,12 @@ void setup() {
 #endif
 
   fc_handler.begin(FC_SERIAL_BAUD);
-
   frsky_encoder.begin();
+
+#ifdef WIFI
   wifi_handler.disconnect();
   wifi_handler.powerOff();
+#endif
 }
 
 void loop() {
@@ -67,6 +76,8 @@ void loop() {
 
   if(!wifi_handler.isWifiON()) {
     wifi_handler.startAP();
+    //-- Boost power to Max
+    wifi_handler.setWifiPower(MAX_WIFI_OUTPUT_POWER);
   }
 
   if (wifi_handler.isClientConnected()) {

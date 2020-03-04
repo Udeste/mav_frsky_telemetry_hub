@@ -2,8 +2,6 @@
 #define GCS_COMM_HANDLER
 
 #include "Arduino.h"
-#include <ESP8266WiFi.h>
-#include <WiFiClient.h>
 #include <WiFiUdp.h>
 #undef F
 #include <common/mavlink.h>
